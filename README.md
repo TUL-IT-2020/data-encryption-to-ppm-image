@@ -3,6 +3,6 @@
 Aplikace pro šifrování souborů do obrázků ppm.
 
 ## TODO:
-[ ] Wiki
-[ ] čtení ze souborů
-[ ] ukládání to souborů
+* [ ] Wiki
+* [ ] čtení ze souborů
+* [ ] ukládání to souborů
