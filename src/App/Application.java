@@ -1,10 +1,10 @@
-package alg2_sem_korner;
+package App;
 
 /**
  *
  * @author pytel
  */
-public class ALG2_SEM_Korner {
+public class Application {
 
     /**
      * @param args the command line arguments
