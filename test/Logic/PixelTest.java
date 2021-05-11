@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Logic;
 
 import org.junit.Test;
@@ -16,7 +11,13 @@ public class PixelTest {
     
     public PixelTest() {
     }
-
+    
+    @Test
+    public void newPixel () {
+        Pixel p = new Pixel((byte)255,(byte)255,(byte)255);
+        System.out.format("Test pixel: %s\n", p);
+    }
+    
     @Test
     public void testSomeMethod() {
     }

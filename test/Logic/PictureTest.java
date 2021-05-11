@@ -15,7 +15,7 @@ public class PictureTest {
     }
     
     @Test
-    public void CreatePicture() {
+    public void createPicture() {
         File path = new File(System.getProperty("user.dir") + "/Data/");
         String name = "Face-smile.ppm";
         File picturePath = new File(path, name);
@@ -27,7 +27,7 @@ public class PictureTest {
     }
     
     @Test
-    public void CreatePicture_InvalidFile() {
+    public void createPicture_InvalidFile() {
         File path = new File(System.getProperty("user.dir") + "/Data/");
         String name = "notAPicture";
         String format = ".ppm";
@@ -43,7 +43,7 @@ public class PictureTest {
     }
     
     @Test
-    public void CreatePicture_ValidFile() {
+    public void createPicture_ValidFile() {
         File path = new File(System.getProperty("user.dir") + "/Data/");
         String name = "Face-smile";
         String format = ".ppm";
@@ -59,7 +59,7 @@ public class PictureTest {
     }
     
     @Test
-    public void CreatePictureAndGetName() {
+    public void createPictureAndGetName() {
         File path = new File(System.getProperty("user.dir") + "/Data/");
         String name = "Face-smile";
         File picturePath = new File(path, name + ".ppm");
@@ -73,7 +73,7 @@ public class PictureTest {
     }
     
     @Test
-    public void CreatePictureAndGetFormat() {
+    public void createPictureAndGetFormat() {
         File path = new File(System.getProperty("user.dir") + "/Data/");
         String name = "Face-smile";
         String format = ".ppm";

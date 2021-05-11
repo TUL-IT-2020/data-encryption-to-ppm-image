@@ -1,16 +1,22 @@
 package Logic;
 
+import java.io.File;
+import java.util.ArrayList;
+
 /**
  *
  * @author pytel
  */
-public class PictureDataInterface {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
+public interface PictureDataInterface {
+    
+    public void loadPicture(File path);
+    
+    public int getHeight();
+    
+    public int getwidth();
+    
+    public ArrayList<ArrayList<Pixel>> getData();
+    
+    public void save2File(File path);
     
 }
