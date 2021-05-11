@@ -2,6 +2,7 @@ package Logic;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 /**
  *
@@ -12,12 +13,23 @@ public class Picture {
     private File path;
     private String name;
     private String format;
+    private int width;
+    private int height;
+    private ArrayList<ArrayList<Pixel>> data;
 
     public Picture(File picturePath) throws FileNotFoundException{
         if (!picturePath.exists()) throw new FileNotFoundException();
         this.path = picturePath;
         this.name = picturePath.getName().split("\\.")[0];
         this.format = "." + picturePath.getName().split("\\.")[1];
+        
+        PictureDataInterface pictureData = new FormatPPM();
+        switch (this.format) {
+            case ".ppm": pictureData.loadPicture(picturePath); break;
+            default:
+                throw new UnsupportedOperationException("Not supported yet format: " + this.format);
+        }
+        
     }
     
     

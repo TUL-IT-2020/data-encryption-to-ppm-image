@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- *
+ * 
  * @author pytel
  */
 public interface PictureDataInterface {
@@ -15,7 +15,9 @@ public interface PictureDataInterface {
     
     public int getwidth();
     
-    public ArrayList<ArrayList<Pixel>> getData();
+    public ArrayList<Pixel> getData();
+    
+    public boolean setData (ArrayList<Pixel> data);
     
     public void save2File(File path);
     

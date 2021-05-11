@@ -1,7 +1,7 @@
 package Logic;
 
 /**
- *
+ * Store data internali as signed Byte.
  * @author pytel
  */
 class Pixel {
@@ -15,7 +15,11 @@ class Pixel {
         this.G = G;
         this.B = B;
     }
-
+    
+    /**
+     * Return value of unsigned Byte.
+     * @return 
+     */
     public int getR() {
         return R & 0xFF;
     }
