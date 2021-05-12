@@ -22,7 +22,7 @@ public class FormatPPM implements PictureDataInterface{
     public void loadPicture(File path) throws FileNotFoundException, IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             if (!readHead(br)) throw new IOException("Unsoported type of ppm format");
-            if (!readData(br)) throw new IOException("Ivalid data format");
+            //if (!readData(br)) throw new IOException("Ivalid data format");
         }
     }
     
@@ -34,17 +34,19 @@ public class FormatPPM implements PictureDataInterface{
             case "P3": break;
             default:
                 return false;   // unsuported format
-        }        
-        line = br.readLine();   
+        }
+        //System.out.format("Magic number: %s\n", MagicNumber);
         // Gimp heading
+        line = br.readLine(); 
         if (line.contains("#")) line = br.readLine();
         // dimensions
         String[] array = line.split(" ");
+        //System.out.format("Array len: %d\n", array.length);
         if (array.length != 2) return false;
         this.width = Integer.parseInt(array[0]);
         this.height = Integer.parseInt(array[1]);
         // Maxval
-        if (Integer.parseInt(br.readLine()) == 255) return false;
+        //if (Integer.parseInt(br.readLine()) != 255) return false;
         
         return true;
     }
@@ -53,6 +55,7 @@ public class FormatPPM implements PictureDataInterface{
         switch (MagicNumber) {
             case "P3":
                 for (int i = 0; i < this.height*this.width; i++) {
+                    System.out.format("%d ", i);
                     data.add(readPixel(br));
                 }
                 break;

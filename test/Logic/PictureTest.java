@@ -2,6 +2,7 @@ package Logic;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -23,6 +24,8 @@ public class PictureTest {
             Picture p = new Picture(picturePath);
         } catch (FileNotFoundException e) {
             System.out.format("ERROR: %s\n", e);
+        } catch (IOException ex) {
+            System.out.format("ERROR: %s\n", ex);
         }
     }
     
@@ -38,6 +41,8 @@ public class PictureTest {
             p = new Picture(picturePath);
         } catch (FileNotFoundException e) {
             System.out.format("ERROR: %s\n", e);
+        } catch (IOException ex) {
+            System.out.format("ERROR: %s\n", ex);
         }
         assert p == null : "Konstruktor does not work.";
     }
@@ -55,6 +60,8 @@ public class PictureTest {
         } catch (FileNotFoundException e) {
             System.out.format("ERROR: %s\n", e);
             assert false : "Konstruktor does not work.";
+        } catch (IOException ex) {
+            System.out.format("ERROR: %s\n", ex);
         }
     }
     
@@ -69,6 +76,8 @@ public class PictureTest {
             assert p.getName().compareTo(name) == 0 : "Invalid name: " + p.getName() + " != " + name;
         } catch (FileNotFoundException e) {
             System.out.format("ERROR: %s\n", e);
+        } catch (IOException ex) {
+            System.out.format("ERROR: %s\n", ex);
         }
     }
     
@@ -83,6 +92,8 @@ public class PictureTest {
             assert p.getFormat().compareTo(format) == 0 : "Invalid name: " + p.getFormat() + " != " + format;
         } catch (FileNotFoundException e) {
             System.out.format("ERROR: %s\n", e);
+        } catch (IOException ex) {
+            System.out.format("ERROR: %s\n", ex);
         }
     }
 

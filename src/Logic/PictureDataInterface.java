@@ -1,6 +1,8 @@
 package Logic;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +11,7 @@ import java.util.ArrayList;
  */
 public interface PictureDataInterface {
     
-    public void loadPicture(File path);
+    public void loadPicture(File path) throws FileNotFoundException, IOException;
     
     public int getHeight();
     

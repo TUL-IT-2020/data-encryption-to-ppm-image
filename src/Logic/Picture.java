@@ -2,6 +2,7 @@ package Logic;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -17,7 +18,7 @@ public class Picture {
     private int height;
     private ArrayList<ArrayList<Pixel>> data;
 
-    public Picture(File picturePath) throws FileNotFoundException{
+    public Picture(File picturePath) throws FileNotFoundException, IOException{
         if (!picturePath.exists()) throw new FileNotFoundException();
         this.path = picturePath;
         this.name = picturePath.getName().split("\\.")[0];
