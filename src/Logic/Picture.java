@@ -43,7 +43,14 @@ public class Picture {
     public String getFormat() {
         return format;
     }
-    
+
+    public int getHeight() {
+        return this.height;
+    }
+
+    public int getwidth() {
+        return this.width;
+    }
     
     /**
      * @param args the command line arguments

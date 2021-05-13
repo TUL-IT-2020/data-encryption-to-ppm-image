@@ -16,10 +16,6 @@ public class PictureTest {
     
     public static TestPictureData[] pictures = TestData.pictures;
     
-    static File path = new File(System.getProperty("user.dir") + "/Data/");
-    static String name = "Face-smile";
-    static String format = ".ppm";
-    
     public PictureTest() {
     }
     
@@ -37,7 +33,6 @@ public class PictureTest {
     
     @Test
     public void createPicture() {
-        File picturePath = new File(path, name + format);
         Picture p = null;
         for (TestPictureData picture : pictures) {
             p = loadPicture(picture.picturePath);
@@ -47,7 +42,9 @@ public class PictureTest {
     
     @Test
     public void createPicture_InvalidFile() {
+        File path = new File(System.getProperty("user.dir") + "/Data/");
         String name = "notAPicture";
+        String format = ".ppm";
         File picturePath = new File(path, name + format);
         Picture p = loadPicture(picturePath);
         assert p == null : "Konstruktor does not work.";
@@ -55,35 +52,50 @@ public class PictureTest {
     
     @Test
     public void createPicture_ValidFile() {
-        File picturePath = new File(path, name + format);
-        Picture p = null;
-        try {
-            //System.out.format("%s\n", picturePath.getAbsolutePath());
-            p = new Picture(picturePath);
-        } catch (FileNotFoundException e) {
-            System.out.format("ERROR: %s\n", e);
-            assert false : "Konstruktor does not work.";
-        } catch (IOException ex) {
-            System.out.format("ERROR: %s\n", ex);
+        Picture p;
+        for (TestPictureData picture : pictures) {
+            try {
+                //System.out.format("%s\n", picturePath.getAbsolutePath());
+                p = new Picture(picture.picturePath);
+            } catch (FileNotFoundException e) {
+                System.out.format("ERROR: %s\n", e);
+                assert false : "Konstruktor does not work.";
+            } catch (IOException ex) {
+                System.out.format("ERROR: %s\n", ex);
+            }
         }
     }
     
     @Test
     public void createPictureAndGetName() {
-        File picturePath = new File(path, name + format);
-        Picture p = loadPicture(picturePath);
-        assertNotNull(p);
-        assert p.getName().compareTo(name) == 0 : "Invalid name: " + p.getName() + " != " + name;
+        Picture p;
+        for (TestPictureData picture : pictures) {
+            p = loadPicture(picture.picturePath);
+            assertNotNull(p);
+            System.out.format("Picture name: %s\n", picture.name);
+            assert p.getName().compareTo(picture.name) == 0 : "Invalid name: " + p.getName() + " != " + picture.name;
+        }
     }
-    
     
     @Test
     public void createPictureAndGetFormat() {
-        File picturePath = new File(path, name + format);
-        Picture p = loadPicture(picturePath);
-        assertNotNull(p);
-        assert p.getFormat().compareTo(format) == 0 : "Invalid name: " + p.getFormat() + " != " + format;
-        
+        Picture p;
+        for (TestPictureData picture : pictures) {
+            p = loadPicture(picture.picturePath);
+            assertNotNull(p);
+            assert p.getFormat().compareTo(picture.format) == 0 : "Invalid name: " + p.getFormat() + " != " + picture.format;
+        }
+    }
+    
+    @Test
+    public void createPictureAndGetSize() {
+        Picture p;
+        for (TestPictureData picture : pictures) {
+            p = loadPicture(picture.picturePath);
+            assertNotNull(p);
+            assert p.getHeight() == picture.height: "Invalid name: " + p.getHeight() + " != " + picture.height;
+            assert p.getwidth() == picture.width: "Invalid name: " + p.getwidth() + " != " + picture.width;
+        }
     }
 
     /**
