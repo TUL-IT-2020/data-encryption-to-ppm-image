@@ -12,14 +12,16 @@ import static org.junit.Assert.*;
  */
 public class PictureTest {
     
+    static File path = new File(System.getProperty("user.dir") + "/Data/");
+    static String name = "Face-smile";
+    static String format = ".ppm";
+    
     public PictureTest() {
     }
     
     @Test
     public void createPicture() {
-        File path = new File(System.getProperty("user.dir") + "/Data/");
-        String name = "Face-smile.ppm";
-        File picturePath = new File(path, name);
+        File picturePath = new File(path, name + format);
         try {
             Picture p = new Picture(picturePath);
         } catch (FileNotFoundException e) {
@@ -31,9 +33,7 @@ public class PictureTest {
     
     @Test
     public void createPicture_InvalidFile() {
-        File path = new File(System.getProperty("user.dir") + "/Data/");
         String name = "notAPicture";
-        String format = ".ppm";
         File picturePath = new File(path, name + format);
         Picture p = null;
         try {
@@ -49,9 +49,6 @@ public class PictureTest {
     
     @Test
     public void createPicture_ValidFile() {
-        File path = new File(System.getProperty("user.dir") + "/Data/");
-        String name = "Face-smile";
-        String format = ".ppm";
         File picturePath = new File(path, name + format);
         Picture p = null;
         try {
@@ -67,9 +64,7 @@ public class PictureTest {
     
     @Test
     public void createPictureAndGetName() {
-        File path = new File(System.getProperty("user.dir") + "/Data/");
-        String name = "Face-smile";
-        File picturePath = new File(path, name + ".ppm");
+        File picturePath = new File(path, name + format);
         Picture p;
         try {
             p = new Picture(picturePath);
@@ -83,9 +78,6 @@ public class PictureTest {
     
     @Test
     public void createPictureAndGetFormat() {
-        File path = new File(System.getProperty("user.dir") + "/Data/");
-        String name = "Face-smile";
-        String format = ".ppm";
         File picturePath = new File(path, name + format);
         try {
             Picture p = new Picture(picturePath);
