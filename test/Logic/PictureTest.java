@@ -83,7 +83,7 @@ public class PictureTest {
         for (TestPictureData picture : pictures) {
             p = loadPicture(picture.picturePath);
             assertNotNull(p);
-            assert p.getFormat().compareTo(picture.format) == 0 : "Invalid name: " + p.getFormat() + " != " + picture.format;
+            assert p.getFormat().compareTo(picture.format) == 0 : "Invalid format: " + p.getFormat() + " != " + picture.format;
         }
     }
     
@@ -93,8 +93,8 @@ public class PictureTest {
         for (TestPictureData picture : pictures) {
             p = loadPicture(picture.picturePath);
             assertNotNull(p);
-            assert p.getHeight() == picture.height: "Invalid name: " + p.getHeight() + " != " + picture.height;
-            assert p.getwidth() == picture.width: "Invalid name: " + p.getwidth() + " != " + picture.width;
+            assert p.getHeight() == picture.height: "Invalid height: " + p.getHeight() + " != " + picture.height;
+            assert p.getwidth() == picture.width: "Invalid width: " + p.getwidth() + " != " + picture.width;
         }
     }
 

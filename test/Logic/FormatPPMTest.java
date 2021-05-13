@@ -27,6 +27,7 @@ public class FormatPPMTest {
                 System.out.format("ERROR: %s\n", ex);
             }
         }
+        assertNotNull(ppm);
     }
     
     @Test
