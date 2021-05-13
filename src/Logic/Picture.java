@@ -3,7 +3,7 @@ package Logic;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -16,7 +16,7 @@ public class Picture {
     private String format;
     private int width;
     private int height;
-    private ArrayList<ArrayList<Pixel>> data;
+    private List<Pixel> data;
 
     public Picture(File picturePath) throws FileNotFoundException, IOException{
         if (!picturePath.exists()) throw new FileNotFoundException();
@@ -31,14 +31,9 @@ public class Picture {
                 throw new UnsupportedOperationException("Not supported yet format: " + this.format);
         }
         
-    }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+        this.width = pictureData.getwidth();
+        this.height = pictureData.getHeight();
+        this.data = pictureData.getData();
     }
 
     public String getName() {
@@ -47,6 +42,14 @@ public class Picture {
 
     public String getFormat() {
         return format;
+    }
+    
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
     }
     
 }

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -16,13 +17,13 @@ public class FormatPPM implements PictureDataInterface{
     private String MagicNumber;
     private int width;
     private int height;
-    private ArrayList<Pixel> data;
+    private List<Pixel> data = new ArrayList();
     
     @Override
     public void loadPicture(File path) throws FileNotFoundException, IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             if (!readHead(br)) throw new IOException("Unsoported type of ppm format");
-            //if (!readData(br)) throw new IOException("Ivalid data format");
+            if (!readData(br)) throw new IOException("Ivalid data format");
         }
     }
     
@@ -46,7 +47,7 @@ public class FormatPPM implements PictureDataInterface{
         this.width = Integer.parseInt(array[0]);
         this.height = Integer.parseInt(array[1]);
         // Maxval
-        //if (Integer.parseInt(br.readLine()) != 255) return false;
+        if (Integer.parseInt(br.readLine()) != 255) return false;
         
         return true;
     }
@@ -54,9 +55,12 @@ public class FormatPPM implements PictureDataInterface{
     private boolean readData (BufferedReader br) throws IOException {
         switch (MagicNumber) {
             case "P3":
+                Pixel pixel;
                 for (int i = 0; i < this.height*this.width; i++) {
-                    System.out.format("%d ", i);
-                    data.add(readPixel(br));
+                    //System.out.format("pixel index: %d \n", i);
+                    if ((pixel = readPixel(br)) == null) return false;
+                    //System.out.format("pixel: %s \n", pixel);
+                    data.add(pixel);
                 }
                 break;
             default:
@@ -69,6 +73,7 @@ public class FormatPPM implements PictureDataInterface{
         int R = Integer.parseInt(br.readLine());
         int G = Integer.parseInt(br.readLine());
         int B = Integer.parseInt(br.readLine());
+        //System.out.format("pixel data: R:%d G:%d B:%d\n", R, G, B);
         return new Pixel((byte)R, (byte)G, (byte)B);
     }
 
@@ -83,7 +88,7 @@ public class FormatPPM implements PictureDataInterface{
     }
 
     @Override
-    public ArrayList<Pixel> getData() {
+    public List<Pixel> getData() {
         return data;
     }
 

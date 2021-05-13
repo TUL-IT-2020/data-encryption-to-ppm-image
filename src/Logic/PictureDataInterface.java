@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -17,7 +18,7 @@ public interface PictureDataInterface {
     
     public int getwidth();
     
-    public ArrayList<Pixel> getData();
+    public List<Pixel> getData();
     
     public boolean setData (ArrayList<Pixel> data);
     
