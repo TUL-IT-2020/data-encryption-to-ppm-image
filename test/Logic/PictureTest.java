@@ -72,7 +72,7 @@ public class PictureTest {
         for (TestPictureData picture : pictures) {
             p = loadPicture(picture.picturePath);
             assertNotNull(p);
-            System.out.format("Picture name: %s\n", picture.name);
+            //System.out.format("Picture name: %s\n", picture.name);
             assert p.getName().compareTo(picture.name) == 0 : "Invalid name: " + p.getName() + " != " + picture.name;
         }
     }
