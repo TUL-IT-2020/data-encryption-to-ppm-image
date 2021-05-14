@@ -53,6 +53,7 @@ public class FormatPPM implements PictureDataInterface{
     }
     
     private boolean readData (BufferedReader br) throws IOException {
+        data.clear();
         switch (MagicNumber) {
             case "P3":
                 Pixel pixel;

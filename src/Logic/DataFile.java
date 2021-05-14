@@ -51,18 +51,20 @@ public class DataFile {
     public long getFileSize() {
         return file.length();
     }
+    
+    private void resetDataArrayPointers () {
+        BitIndex = 0;
+        ByteIndex = 0;
+    }
 
     /**
      * Load file content to memory.
      */
     void ReadFile() throws FileNotFoundException, IOException {
-        // reset pointers
-        BitIndex = 0;
-        ByteIndex = 0;
+        resetDataArrayPointers();
         
         // TODO change, nead lot of memory!!!
         // TODO asi to shoří na velký soubory: long -> int
-        
         FileContent = new byte[(int)getFileSize()];
         try (FileInputStream fis = new FileInputStream(file)) {
             fis.read(FileContent);

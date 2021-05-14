@@ -113,6 +113,21 @@ public class PictureTest {
                     p.canStorebites(depthPerChannel) + " != " + calculatedCapacity;
         }
     }
+    
+    @Test
+    public void willFileFitToPisture() {
+        Picture p;
+        for (TestPictureData picture : pictures) {
+            p = loadPicture(picture.picturePath);
+            
+        }
+    }
+    
+    @Test
+    public void storeFileToPisture() {
+        Picture p;
+        p = loadPicture(pictures[1].picturePath);
+    }
 
     /**
      * Test of main method, of class Picture.

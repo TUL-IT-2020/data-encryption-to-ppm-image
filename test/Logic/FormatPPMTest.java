@@ -49,15 +49,15 @@ public class FormatPPMTest {
     @Test
     public void readData() {
         FormatPPM ppm = new FormatPPM();
-        //for (TestPictureData picture : pictures) {
+        for (TestPictureData picture : pictures) {
             try {
-                ppm.loadPicture(pictures[0].picturePath);
+                ppm.loadPicture(picture.picturePath);
             } catch (IOException ex) {
                 System.out.format("ERROR: %s\n", ex);
             }
-            Assert.assertNotNull(ppm.getData());
+            assertNotNull(ppm.getData());
             System.out.format("Data: %s\n", ppm.getData());
-        //}
+        }
     }
     
 }

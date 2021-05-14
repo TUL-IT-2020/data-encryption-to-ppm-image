@@ -40,4 +40,29 @@ public class TestData {
             picturePath = new File(path, name + format);
         }
     }
+    
+    /**
+     * Files for testing.
+     */
+    public static TestFileData[] files = {
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                "test", ".txt", 6)
+    };
+    
+    static class TestFileData {
+        public File path;
+        public String name;
+        public String format;
+        public File filePath;
+        public long size;
+
+        public TestFileData(File path, String name, String format, long size) {
+            this.path = path;
+            this.name = name;
+            this.format = format;
+            this.filePath = new File(path, name + format); 
+            this.size = size;
+        }
+    }
 }
