@@ -58,5 +58,16 @@ public class Picture {
     public static void main(String[] args) {
         // TODO code application logic here
     }
+
+    /**
+     * Return how much bites can picture store
+     * @param depthPerChannel
+     * @return 
+     */
+    public long canStorebites(int depthPerChannel) {
+        if (depthPerChannel< 0 || depthPerChannel > 8) return -1;
+        long capacity = 3*width*height*depthPerChannel;
+        return capacity;
+    }
     
 }

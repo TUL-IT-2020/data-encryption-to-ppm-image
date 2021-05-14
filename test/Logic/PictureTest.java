@@ -42,10 +42,9 @@ public class PictureTest {
     
     @Test
     public void createPicture_InvalidFile() {
-        File path = new File(System.getProperty("user.dir") + "/Data/");
         String name = "notAPicture";
         String format = ".ppm";
-        File picturePath = new File(path, name + format);
+        File picturePath = new File(pictures[0].path, name + format);
         Picture p = loadPicture(picturePath);
         assert p == null : "Konstruktor does not work.";
     }
@@ -73,7 +72,8 @@ public class PictureTest {
             p = loadPicture(picture.picturePath);
             assertNotNull(p);
             //System.out.format("Picture name: %s\n", picture.name);
-            assert p.getName().compareTo(picture.name) == 0 : "Invalid name: " + p.getName() + " != " + picture.name;
+            assert p.getName().compareTo(picture.name) == 0 : "Invalid name: " + 
+                    p.getName() + " != " + picture.name;
         }
     }
     
@@ -83,7 +83,8 @@ public class PictureTest {
         for (TestPictureData picture : pictures) {
             p = loadPicture(picture.picturePath);
             assertNotNull(p);
-            assert p.getFormat().compareTo(picture.format) == 0 : "Invalid format: " + p.getFormat() + " != " + picture.format;
+            assert p.getFormat().compareTo(picture.format) == 0 : "Invalid format: " + 
+                    p.getFormat() + " != " + picture.format;
         }
     }
     
@@ -93,8 +94,23 @@ public class PictureTest {
         for (TestPictureData picture : pictures) {
             p = loadPicture(picture.picturePath);
             assertNotNull(p);
-            assert p.getHeight() == picture.height: "Invalid height: " + p.getHeight() + " != " + picture.height;
-            assert p.getwidth() == picture.width: "Invalid width: " + p.getwidth() + " != " + picture.width;
+            assert p.getHeight() == picture.height: "Invalid height: " + 
+                    p.getHeight() + " != " + picture.height;
+            assert p.getwidth() == picture.width: "Invalid width: " + 
+                    p.getwidth() + " != " + picture.width;
+        }
+    }
+    
+    @Test
+    public void PictureCanStoreData() {
+        Picture p;
+        int depthPerChannel = 1;
+        long calculatedCapacity;
+        for (TestPictureData picture : pictures) {
+            p = loadPicture(picture.picturePath);
+            calculatedCapacity = 3*picture.width*picture.height*depthPerChannel;
+            assert p.canStorebites(depthPerChannel) == calculatedCapacity: "Invalid size to store: " + 
+                    p.canStorebites(depthPerChannel) + " != " + calculatedCapacity;
         }
     }
 

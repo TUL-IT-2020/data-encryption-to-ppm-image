@@ -13,13 +13,13 @@ public class TestData {
      */
     public static TestPictureData[] pictures = {
         new TestPictureData(
-            new File(System.getProperty("user.dir") + "/Data/"),
+            new File(System.getProperty("user.dir") + "/Data/testDataSet"),
             "small", ".ppm", 2, 3),
         new TestPictureData(
-            new File(System.getProperty("user.dir") + "/Data/"),
+            new File(System.getProperty("user.dir") + "/Data/testDataSet"),
             "white", ".ppm", 10, 10),
         new TestPictureData(
-            new File(System.getProperty("user.dir") + "/Data/"),
+            new File(System.getProperty("user.dir") + "/Data/testDataSet"),
             "Face-smile", ".ppm", 50, 50)
     };
     
