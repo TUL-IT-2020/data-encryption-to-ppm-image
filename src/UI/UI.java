@@ -56,7 +56,21 @@ public class UI {
         System.out.format("\t 1) Vybrat formát: %s.\n", format);
         System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
         System.out.format("\t 3) Vypsat obsah dle: %s.\n", sortingType);
-        System.out.format("\t 4) Odejít.\n");
+        System.out.format("\t 4) Přidat soubor.\n");
+        System.out.format("\t 5) Smazat záznamy.\n");
+        System.out.format("\t 6) Provést/Uložit.\n");
+        System.out.format("\t 7) Odejít.\n");
+        System.out.print("Zadej volbu: ");
+    }
+    
+    public static void loadToPictureMenu(String format, Picture picture, String sortingType) {
+        System.out.format("\t 1) Vybrat formát: %s.\n", format);
+        System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
+        System.out.format("\t 3) Vypsat obsah dle: %s.\n", sortingType);
+        System.out.format("\t 4) Přidat soubor.\n");
+        System.out.format("\t 5) Smazat záznamy.\n");
+        System.out.format("\t 6) Provést/Uložit.\n");
+        System.out.format("\t 7) Odejít.\n");
         System.out.print("Zadej volbu: ");
     }
 
@@ -66,6 +80,15 @@ public class UI {
             System.out.format("\t %d) %s\n", i+1, PICTURE_FORMATS[i]);
         }
         System.out.print("Zadej volbu: ");
+    }
+
+    public static File[] listAllFiles(File dir) {
+        File[] files = dir.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            System.out.format("\t %d) %s\n", i+1, files[i].getName());
+        }        
+        System.out.print("Zadej volbu: ");
+        return files;
     }
      
 }
