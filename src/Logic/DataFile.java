@@ -25,7 +25,7 @@ public class DataFile {
      * @param filePath
      * @throws FileNotFoundException 
      */
-    public void loadFile(File filePath) throws FileNotFoundException {
+    public DataFile(File filePath) throws FileNotFoundException {
         if (!filePath.exists()) throw new FileNotFoundException();
         this.file = filePath;
         this.name = filePath.getName().split("\\.")[0];

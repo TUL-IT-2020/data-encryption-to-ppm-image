@@ -19,9 +19,9 @@ public class DataFileTest {
     }
 
     public DataFile loadFile(File filePath) {
-        DataFile df = new DataFile();
+        DataFile df = null;
         try {
-            df.loadFile(filePath);
+            df = new DataFile(filePath);
         } catch (FileNotFoundException ex) {
             System.out.format("ERROR: %s\n", ex);
         }

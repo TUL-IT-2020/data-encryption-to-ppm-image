@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 public class FormatPPM implements PictureDataInterface{
 
+    private static int MAX_VALUE = 255;
     private String MagicNumber;
     private int width;
     private int height;
@@ -47,7 +49,7 @@ public class FormatPPM implements PictureDataInterface{
         this.width = Integer.parseInt(array[0]);
         this.height = Integer.parseInt(array[1]);
         // Maxval
-        if (Integer.parseInt(br.readLine()) != 255) return false;
+        if (Integer.parseInt(br.readLine()) != MAX_VALUE) return false;
         
         return true;
     }
@@ -94,12 +96,52 @@ public class FormatPPM implements PictureDataInterface{
     }
 
     @Override
-    public boolean setData(ArrayList<Pixel> data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean setData(List<Pixel> data) {
+        if (data.size() != width*height) return false;
+        this.data = data;
+        return true;
     }
     
     @Override
-    public void save2File(File path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save2File(File path) throws FileNotFoundException, IOException {
+        try (FileWriter fw = new FileWriter(path)) {
+            writeHead(fw);
+            if (!writeData(fw)) throw new IOException("Ivalid data format");
+        }
+    }
+    
+    private void writeHead (FileWriter fw) throws IOException {
+        // Format
+        fw.write(MagicNumber + "\n");
+        // heading
+        fw.write("# Modified by my app.\n");  // TODO konstant
+        // dimensions
+        fw.write(this.width + " " + this.height + "\n");
+        // Maxval
+        fw.write(MAX_VALUE + "\n");
+    }
+    
+    private boolean writeData (FileWriter fw) throws IOException {
+        switch (MagicNumber) {
+            case "P3":
+                for (Pixel pixel : data) {
+                    if (!writeP3TypePixel(fw, pixel)) return false;
+                }
+                break;
+            default:
+                return false;   // unsuported format
+        }
+        return true;
+    }
+    
+    private boolean writeP3TypePixel (FileWriter fw, Pixel pixel) throws IOException{
+        // TODO use string builder !!!
+        int R = pixel.getR();
+        int G = pixel.getG();
+        int B = pixel.getB();
+        fw.write(R + "\n");
+        fw.write(G + "\n");
+        fw.write(B + "\n");
+        return (R <= MAX_VALUE && R >= 0 && G <= MAX_VALUE && G >= 0 && B <= MAX_VALUE && B >= 0 );
     }
 }

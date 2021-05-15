@@ -3,7 +3,6 @@ package Logic;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,8 +19,8 @@ public interface PictureDataInterface {
     
     public List<Pixel> getData();
     
-    public boolean setData (ArrayList<Pixel> data);
+    public boolean setData (List<Pixel> data);
     
-    public void save2File(File path);
+    public void save2File(File path) throws FileNotFoundException, IOException;
     
 }

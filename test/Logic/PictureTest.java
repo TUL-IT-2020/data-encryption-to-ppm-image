@@ -4,6 +4,8 @@ import Logic.TestData.TestPictureData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -24,12 +26,13 @@ public class PictureTest {
         try {
             p = new Picture(picturePath);
         } catch (FileNotFoundException e) {
-            System.out.format("ERROR: %s\n", e);
+            //System.out.format("ERROR: %s\n", e);
         } catch (IOException ex) {
             System.out.format("ERROR: %s\n", ex);
         }
         return p;
     }
+    
     
     @Test
     public void createPicture() {
@@ -115,20 +118,18 @@ public class PictureTest {
     }
     
     @Test
-    public void willFileFitToPisture() {
+    public void savePicture() {
         Picture p;
-        for (TestPictureData picture : pictures) {
-            p = loadPicture(picture.picturePath);
-            
+        p = loadPicture(pictures[1].picturePath);
+        String newName = p.getName() + "_generated" + p.getFormat();
+        System.out.format("New name: %s\n", newName);
+        try {
+            p.save(newName);
+        } catch (IOException ex) {
+            assert false : "ERROR: " + ex + "\n";
         }
     }
     
-    @Test
-    public void storeFileToPisture() {
-        Picture p;
-        p = loadPicture(pictures[1].picturePath);
-    }
-
     /**
      * Test of main method, of class Picture.
      */

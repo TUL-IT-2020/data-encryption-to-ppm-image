@@ -3,6 +3,7 @@ package Logic;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,9 +15,9 @@ public class Picture {
     private File path;
     private String name;
     private String format;
-    private int width;
-    private int height;
-    private List<Pixel> data;
+    private List<Pixel> data = new ArrayList();
+    
+    private PictureDataInterface pictureDataAndInfo;
 
     public Picture(File picturePath) throws FileNotFoundException, IOException{
         if (!picturePath.exists()) throw new FileNotFoundException();
@@ -24,16 +25,14 @@ public class Picture {
         this.name = picturePath.getName().split("\\.")[0];
         this.format = "." + picturePath.getName().split("\\.")[1];
         
-        PictureDataInterface pictureData = new FormatPPM();
+        pictureDataAndInfo = new FormatPPM();
         switch (this.format) {
-            case ".ppm": pictureData.loadPicture(picturePath); break;
+            case ".ppm": pictureDataAndInfo.loadPicture(picturePath); break;
             default:
                 throw new UnsupportedOperationException("Not supported yet format: " + this.format);
         }
         
-        this.width = pictureData.getwidth();
-        this.height = pictureData.getHeight();
-        this.data = pictureData.getData();
+        this.data = pictureDataAndInfo.getData();
     }
 
     public String getName() {
@@ -45,18 +44,11 @@ public class Picture {
     }
 
     public int getHeight() {
-        return this.height;
+        return pictureDataAndInfo.getHeight();
     }
 
     public int getwidth() {
-        return this.width;
-    }
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+        return pictureDataAndInfo.getwidth();
     }
 
     /**
@@ -66,8 +58,36 @@ public class Picture {
      */
     public long canStorebites(int depthPerChannel) {
         if (depthPerChannel< 0 || depthPerChannel > 8) return -1;
-        long capacity = 3*width*height*depthPerChannel;
+        long capacity = 3*getwidth()*getHeight()*depthPerChannel;
         return capacity;
+    }
+    
+    private boolean createNewFile (File file) throws IOException {
+        if (file.exists()) {
+            // file already exist, removing file.
+            file.delete();
+        }
+        return file.createNewFile();
+    }
+
+    public void save(String newName) throws IOException{
+        // create file
+        File newFile = new File(path.getParentFile(), newName);
+        System.out.format("New file: %s\n", newFile.getAbsoluteFile());
+        createNewFile(newFile);
+        
+        // store data
+        pictureDataAndInfo.setData(data);
+        
+        // save data
+        pictureDataAndInfo.save2File(newFile);
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
     }
     
 }
