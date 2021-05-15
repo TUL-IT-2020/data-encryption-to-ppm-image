@@ -101,6 +101,7 @@ public class Picture {
         int indexOfChanel = byteIndex*8 % (3*chunk);
         // TODO
         byteIndex++;
+        return (byte)0;
     }
     
     private int nextInt () {
@@ -120,7 +121,8 @@ public class Picture {
     
     public int getNumberOfStoredFiles (int chunk) {
         if (!checkForHeader(chunk)) return -1;
-        
+        // TODO
+        return -1;
     }
 
     /*
