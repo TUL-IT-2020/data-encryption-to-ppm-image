@@ -4,8 +4,6 @@ import Logic.TestData.TestPictureData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -122,9 +120,11 @@ public class PictureTest {
         Picture p;
         p = loadPicture(pictures[1].picturePath);
         String newName = p.getName() + "_generated" + p.getFormat();
-        System.out.format("New name: %s\n", newName);
+        File newFile = new File(pictures[1].path, newName);
+        //System.out.format("New name: %s\n", newName);
         try {
             p.save(newName);
+            newFile.delete();
         } catch (IOException ex) {
             assert false : "ERROR: " + ex + "\n";
         }

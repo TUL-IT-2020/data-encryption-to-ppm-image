@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class Picture {
 
+    private static String HEADER_KEY = "42";    // TODO chenge it
+    
     private File path;
     private String name;
     private String format;
@@ -73,7 +75,7 @@ public class Picture {
     public void save(String newName) throws IOException{
         // create file
         File newFile = new File(path.getParentFile(), newName);
-        System.out.format("New file: %s\n", newFile.getAbsoluteFile());
+        //System.out.format("New file: %s\n", newFile.getAbsoluteFile());
         createNewFile(newFile);
         
         // store data
@@ -83,11 +85,54 @@ public class Picture {
         pictureDataAndInfo.save2File(newFile);
     }
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    
+    private int byteIndex;  // nth Byte
+    private int chunk;
+    private void setChunk (int chunk) {
+        this.chunk = chunk;
     }
     
+    private void setByteIndex (int index) {
+        byteIndex = index;
+    }
+    
+    private byte nextByte () {
+        int indexOfPixel = byteIndex*8 / (3*chunk);
+        int indexOfChanel = byteIndex*8 % (3*chunk);
+        // TODO
+        byteIndex++;
+    }
+    
+    private int nextInt () {
+        return nextByte() << 8 | nextByte();
+    }
+
+    private boolean checkForHeader(int chunk) {
+        setChunk(chunk);
+        StringBuilder pictureContent = new StringBuilder();
+        char nextChar;
+        for (int i = 0; i < HEADER_KEY.length(); i++) {
+            nextChar = (char)(nextByte() & 0xFF);
+            pictureContent.append(nextChar);
+        }
+        return HEADER_KEY.compareTo(pictureContent.toString()) == 0;
+    }
+    
+    public int getNumberOfStoredFiles (int chunk) {
+        if (!checkForHeader(chunk)) return -1;
+        
+    }
+
+    /*
+    public DataFile[] storedFiles() {
+        DataFile[] dtfs = null;
+        if (!checkHeader()) {
+            return dtfs;
+        }
+    }*/
+    
+    /*
+    public boolean addFile(DataFile df) {
+        // File is to big
+    }*/
 }

@@ -14,6 +14,9 @@ public class DataFile {
     private File file;
     private String name;
     private String format;
+    // TODO add time of file creation
+    // TODO sort by size
+    // TODO sort by time
     
     public static int BYTE_LENGHT = 8;
     private int ByteIndex;
@@ -34,14 +37,6 @@ public class DataFile {
 
     public String getName() {
         return name;
-    }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
     }
 
     /**
@@ -80,6 +75,11 @@ public class DataFile {
         return (char)(B & 0xFF);
     }
     
+    /**
+     * Return next n bites stored in Byte aligned to right.
+     * @param chunkSize => n bites to read
+     * @return 
+     */
     public Byte getNextNbites(int chunkSize) {
         if (ByteIndex >= FileContent.length) return null;
         byte bitArray = 0;
@@ -100,6 +100,15 @@ public class DataFile {
         }
         return bitArray;
     }
+    
+    // TODO test it
+    public byte getByte (int index) {
+        return FileContent[index];
+    }
 
+    @Override
+    public String toString() {
+        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getFileSize() + '}';
+    }
     
 }

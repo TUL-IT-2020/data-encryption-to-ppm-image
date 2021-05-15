@@ -56,12 +56,40 @@ public class PictureAndDataTest {
         }
     }
     
+    
+    @Test
+    public void numberOfStoredFilesInPicture() {
+        int number;
+        int chunk = 1;
+        Picture p;
+        p = loadPicture(pictures[1].picturePath);
+        number = p.getNumberOfStoredFiles(chunk);
+        assertEquals(number, -1);
+    }
+    
+    /*
+    @Test
+    public void listStoredFilesInPicture() {
+        Picture p;
+        DataFile[] dtfs;
+        p = loadPicture(pictures[1].picturePath);
+        dtfs = p.storedFiles();
+        for (DataFile dtf : dtfs) {
+            System.out.format("%s\n", dtf);
+        }
+    }*/
+    
     @Test
     public void storeFileToPicture() {
         Picture p;
         DataFile df;
         p = loadPicture(pictures[1].picturePath);
         df = loadFile(files[0].filePath);
+        
+        //p.addFile(df);
         // TODO
+        // p.removeAllStored()
+        // 
+        // 
     }
 }

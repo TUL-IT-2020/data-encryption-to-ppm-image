@@ -92,6 +92,7 @@ public class FormatPPM implements PictureDataInterface{
 
     @Override
     public List<Pixel> getData() {
+        // TODO poskytovat kopii !!!
         return data;
     }
 
