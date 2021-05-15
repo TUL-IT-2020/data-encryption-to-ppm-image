@@ -19,36 +19,16 @@ public class Application {
     public static File dataDir = new File(System.getProperty("user.dir") + "/Data/testDataSet");
     private static String pictureFormat = PICTURE_FORMATS[DEFAULT_PICTURE_FORMAT];
     private static Picture picture = null;
+    private static DataFile dataFile;
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        while (!exit) {
-            UI.printMenu();
-            switch (UI.readInt()) {
-                case 1:
-                    loadFromPicture();
-                    break;
-                case 2:
-                    
-                    break;
-                case 3:
-                    exit = true;
-                    break;
-                default:
-                    UI.printInvaliInput();
-            }
-        }
-        UI.printEnd();
-    }
-
-    private static void loadFromPicture() {
-        boolean quit = false;
         int index;
         File[] files;
-        DataFile dataFile;
-        while (!quit) {
+        DataFile[] dataFiles;
+        while (!exit) {
             UI.loadFromPictureMenu(pictureFormat, picture, null);
             switch (UI.readInt()) {
                 case 1: // Change format
@@ -93,24 +73,31 @@ public class Application {
                         UI.printInvaliInput();
                     }
                     break;
-                case 5: // delete all records
+                case 5: // Load File from picture
+                    if (picture == null) {
+                        UI.print("Obrázek není vybrán!");
+                    } else {
+                        //datafiles = picture.storedFiles();
+                    }
+                    break;
+                case 6: // delete all records
                     if (picture == null) {
                         UI.print("Obrázek není vybrán!");
                     } else {
                         //picture.removeAllStored();
                     }
                     break;
-                case 6: // Aply !
+                case 7: // Aply !
                     
                     break;
-                case 7: // Quit
-                    quit = true;
+                case 8: // Quit
+                    exit = true;
                     break;
                 default:
                     UI.printInvaliInput();
             }
         }
-        
+        UI.printEnd();
     }
     
 }

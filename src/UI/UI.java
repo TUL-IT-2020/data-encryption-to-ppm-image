@@ -21,14 +21,6 @@ public class UI {
         return number;
     }
 
-    public static void printMenu() {
-        System.out.println(" --- Hlavní menu ---");
-        System.out.println("\t 1) Načíst data z obrázku.");
-        System.out.println("\t 2) Vložit data do obrázku.");
-        System.out.println("\t 3) Ukončit.");
-        System.out.print("Zadej volbu: ");
-    }
-
     public static void printInvaliInput() {
         System.out.println("Špatný vstup!");
     }
@@ -53,24 +45,16 @@ public class UI {
     }
 
     public static void loadFromPictureMenu(String format, Picture picture, String sortingType) {
+        
+        System.out.println(" --- Hlavní menu ---");
         System.out.format("\t 1) Vybrat formát: %s.\n", format);
         System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
         System.out.format("\t 3) Vypsat obsah dle: %s.\n", sortingType);
-        System.out.format("\t 4) Přidat soubor.\n");
-        System.out.format("\t 5) Smazat záznamy.\n");
-        System.out.format("\t 6) Provést/Uložit.\n");
-        System.out.format("\t 7) Odejít.\n");
-        System.out.print("Zadej volbu: ");
-    }
-    
-    public static void loadToPictureMenu(String format, Picture picture, String sortingType) {
-        System.out.format("\t 1) Vybrat formát: %s.\n", format);
-        System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
-        System.out.format("\t 3) Vypsat obsah dle: %s.\n", sortingType);
-        System.out.format("\t 4) Přidat soubor.\n");
-        System.out.format("\t 5) Smazat záznamy.\n");
-        System.out.format("\t 6) Provést/Uložit.\n");
-        System.out.format("\t 7) Odejít.\n");
+        System.out.format("\t 4) Přidat soubor do obrázku.\n");
+        System.out.format("\t 5) Nahrát soubor z obrázku.\n");
+        System.out.format("\t 6) Smazat záznamy.\n");
+        System.out.format("\t 7) Provést/Uložit.\n");
+        System.out.format("\t 8) Odejít.\n");
         System.out.print("Zadej volbu: ");
     }
 
