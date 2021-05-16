@@ -49,6 +49,18 @@ public class DataFile {
      */
     public DataFile(byte[] header) {
         //TODO
+        List<Byte> Bytes = new ArrayList();
+        add2List(Bytes, header);
+        
+        // name lenght
+        int stringLenght = nextInt(Bytes);
+        // name string
+        this.name = nextString(Bytes, stringLenght);
+        
+        // format lenght
+        stringLenght = nextInt(Bytes);
+        // format string
+        this.format = nextString(Bytes, stringLenght);
     }
 
     public String getName() {
@@ -98,6 +110,7 @@ public class DataFile {
         
         // Int Header lenght
         // --- first index !!!
+        
         // Int Data lenght
         add2List(Bytes, int2Bytes((int)this.getFileSize()));
         
