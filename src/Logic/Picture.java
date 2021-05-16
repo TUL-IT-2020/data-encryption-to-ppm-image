@@ -13,13 +13,48 @@ import java.util.List;
 public class Picture {
 
     private static String HEADER_KEY = "42";    // TODO chenge it
+    private static int NUMBER_OF_CHANELS = 3;
     
     private File path;
     private String name;
     private String format;
-    private List<Pixel> data = new ArrayList();
     
     private PictureDataInterface pictureDataAndInfo;
+    
+    private List<Pixel> data = new ArrayList();
+    private Counter byteIndex;  // nth Byte
+    private int chunkSize;
+    
+    private class Counter {
+        private final int size;
+        private int number = 0;
+
+        public Counter(int size) {
+            this.size = size;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public boolean setNumber(int number) {
+            if (number >= size || number < 0) {
+                return false;
+            }
+            this.number = number;
+            return true;
+        }
+        
+        public int add() {
+            return add(1);
+        }
+        
+        public int add(int number) {
+            this.number = (this.number + number)%size;
+            int carry = (this.number + number)/size;
+            return carry;
+        }
+    }
 
     public Picture(File picturePath) throws FileNotFoundException, IOException{
         if (!picturePath.exists()) throw new FileNotFoundException();
@@ -35,6 +70,7 @@ public class Picture {
         }
         
         this.data = pictureDataAndInfo.getData();
+        this.byteIndex = new Counter(data.size());
     }
 
     public String getName() {
@@ -85,22 +121,31 @@ public class Picture {
         pictureDataAndInfo.save2File(newFile);
     }
     
-    
-    private int byteIndex;  // nth Byte
-    private int chunk;
-    private void setChunk (int chunk) {
-        this.chunk = chunk;
+    private void setChunkSize (int chunk) {
+        this.chunkSize = chunk;
     }
     
     private void setByteIndex (int index) {
-        byteIndex = index;
+        byteIndex.setNumber(index);
     }
     
     private byte nextByte () {
-        int indexOfPixel = byteIndex*8 / (3*chunk);
-        int indexOfChanel = byteIndex*8 % (3*chunk);
+        Counter indexOfPixel = new Counter(data.size()*NUMBER_OF_CHANELS);
+        Counter indexOfChanel = new Counter(NUMBER_OF_CHANELS);
+        Counter indexOfbite = new Counter(chunkSize);
+        indexOfPixel.setNumber(byteIndex.getNumber()*8 / (NUMBER_OF_CHANELS*chunkSize));
+        indexOfChanel.setNumber((byteIndex.getNumber()*8 % (NUMBER_OF_CHANELS*chunkSize)) / (chunkSize));
+        indexOfbite.setNumber((byteIndex.getNumber()*8) % (chunkSize));
+        System.out.format("Pixel: %d \t Chanel: %d \t bite: %d\n", 
+                indexOfPixel.getNumber(), indexOfChanel.getNumber(), indexOfbite.getNumber());
+        /*
+        int indexOfPixel = byteIndex.getNumber()*8 / (3*chunkSize);
+        int indexOfChanel = (byteIndex.getNumber()*8 % (3*chunkSize)) / (chunkSize);
+        int indexOfbite = (byteIndex.getNumber()*8) % (chunkSize);
+        System.out.format("Pixel: %d \t Chanel: %d \t bite: %d\n", indexOfPixel, indexOfChanel, indexOfbite);
+        */
         // TODO
-        byteIndex++;
+        byteIndex.add();
         return (byte)0;
     }
     
@@ -109,7 +154,7 @@ public class Picture {
     }
 
     private boolean checkForHeader(int chunk) {
-        setChunk(chunk);
+        setChunkSize(chunk);
         StringBuilder pictureContent = new StringBuilder();
         char nextChar;
         for (int i = 0; i < HEADER_KEY.length(); i++) {
@@ -137,4 +182,31 @@ public class Picture {
     public boolean addFile(DataFile df) {
         // File is to big
     }*/
+    
+    
+    /**
+     * Private metode test helper.
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        File path = new File(System.getProperty("user.dir") + "/Data/testDataSet");
+        
+        File picturePath = new File(path, "white.ppm");
+        try {
+            Picture p = new Picture(picturePath);
+            p.setByteIndex(0);
+            p.setChunkSize(2);
+            p.nextByte();
+            p.nextByte();
+            p.nextByte();
+            p.nextByte();
+            p.nextByte();
+            p.nextByte();
+            p.nextByte();
+            p.nextByte();
+            p.nextByte();
+        } catch (IOException ex) {
+        }
+        
+    }
 }
