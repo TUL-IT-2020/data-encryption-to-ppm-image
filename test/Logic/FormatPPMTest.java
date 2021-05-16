@@ -1,5 +1,6 @@
 package Logic;
 
+import Logic.PictureFormats.FormatPPM;
 import Logic.TestData.TestPictureData;
 import java.io.File;
 import java.io.IOException;

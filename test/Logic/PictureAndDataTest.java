@@ -1,4 +1,3 @@
-
 package Logic;
 
 import static Logic.PictureTest.pictures;
@@ -45,17 +44,17 @@ public class PictureAndDataTest {
         int depthPerChannel = 1;
         for (TestData.TestPictureData picture : pictures) {
             p = loadPicture(picture.picturePath);
+            p.setChunkSize(depthPerChannel);
             for (TestData.TestFileData file : files) {
                 df = loadFile(file.filePath);
                 System.out.format("File: %s %s fit to picture: %s.\n", 
                         file.name,
-                        p.canStorebites(depthPerChannel) > df.getFileSize()*8 ? "wil" : "wont",
+                        p.canStorebites() > df.getGrossSize()*8 ? "wil" : "wont",
                         picture.name
                         );
             }
         }
     }
-    
     
     @Test
     public void numberOfStoredFilesInPicture() {
@@ -63,33 +62,50 @@ public class PictureAndDataTest {
         int chunk = 1;
         Picture p;
         p = loadPicture(pictures[1].picturePath);
-        number = p.getNumberOfStoredFiles(chunk);
+        p.setChunkSize(chunk);
+        number = p.getNumberOfStoredFiles();
         assertEquals(number, -1);
     }
     
-    /*
     @Test
     public void listStoredFilesInPicture() {
+        int chunk = 1;
         Picture p;
         DataFile[] dtfs;
         p = loadPicture(pictures[1].picturePath);
+        p.setChunkSize(chunk);
         dtfs = p.storedFiles();
-        for (DataFile dtf : dtfs) {
-            System.out.format("%s\n", dtf);
+        if (dtfs != null) {
+            for (DataFile dtf : dtfs) {
+                System.out.format("%s\n", dtf);
+            }
         }
-    }*/
+    }
     
     @Test
     public void storeFileToPicture() {
-        Picture p;
+        Picture picture;
+        Picture newPicture;
         DataFile df;
-        p = loadPicture(pictures[1].picturePath);
+        picture = loadPicture(pictures[1].picturePath);
+        String newName = picture.getName() + "_generated" + picture.getFormat();
+        File newFile = new File(pictures[1].path, newName);
+        //System.out.format("New name: %s\n", newName);
+        try {
+            picture.save(newName);
+        } catch (IOException ex) {
+            assert false : "ERROR: " + ex + "\n";
+        }
+        newPicture = loadPicture(newFile);
         df = loadFile(files[0].filePath);
-        
-        //p.addFile(df);
+        assert (newPicture.addFile(df) ? 
+                newPicture.canStorebites() > df.getFileSize() : 
+                newPicture.canStorebites() < df.getFileSize()
+                ) : "ERROR";
         // TODO
         // p.removeAllStored()
         // 
         // 
+        newFile.delete();
     }
 }

@@ -1,5 +1,7 @@
-package Logic;
+package Logic.PictureFormats;
 
+import Logic.PictureFormats.PictureDataInterface;
+import Logic.Pixel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;

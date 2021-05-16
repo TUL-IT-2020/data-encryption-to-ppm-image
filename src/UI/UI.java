@@ -1,5 +1,6 @@
 package UI;
 
+import Tools.ExtensionFilter;
 import Logic.Picture;
 import java.io.File;
 import java.util.Scanner;
@@ -44,17 +45,18 @@ public class UI {
         System.out.format("%s", s);
     }
 
-    public static void loadFromPictureMenu(String format, Picture picture, String sortingType) {
+    public static void loadFromPictureMenu(String format, Picture picture, int chunkSize, String sortingType) {
         
         System.out.println(" --- Hlavní menu ---");
-        System.out.format("\t 1) Vybrat formát: %s.\n", format);
+        System.out.format("\t 1) Vybrat formát: %s\n", format);
         System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
-        System.out.format("\t 3) Vypsat obsah dle: %s.\n", sortingType);
-        System.out.format("\t 4) Přidat soubor do obrázku.\n");
-        System.out.format("\t 5) Nahrát soubor z obrázku.\n");
-        System.out.format("\t 6) Smazat záznamy.\n");
-        System.out.format("\t 7) Provést/Uložit.\n");
-        System.out.format("\t 8) Odejít.\n");
+        System.out.format("\t 3) Vybrat velikost chunku: %d.\n", chunkSize);
+        System.out.format("\t 4) Vypsat obsah dle: %s.\n", sortingType);
+        System.out.format("\t 5) Přidat soubor do obrázku.\n");
+        System.out.format("\t 6) Nahrát soubor z obrázku.\n");
+        System.out.format("\t 7) Smazat záznamy.\n");
+        System.out.format("\t 8) Provést/Uložit.\n");
+        System.out.format("\t 9) Odejít.\n");
         System.out.print("Zadej volbu: ");
     }
 

@@ -110,5 +110,14 @@ public class DataFile {
     public String toString() {
         return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getFileSize() + '}';
     }
+
+    public long getGrossSize() {
+        return getHeaderSize() + getFileSize();
+    }
+
+    public long getHeaderSize() {
+        // TODO
+        return 0;
+    }
     
 }
