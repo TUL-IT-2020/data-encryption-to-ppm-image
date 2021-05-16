@@ -1,13 +1,13 @@
 package Logic;
 
 import Logic.PictureFormats.FormatPPM;
-import Logic.PictureFormats.PictureDataInterface;
 import Tools.Counter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import Logic.PictureFormats.PictureFormatInterface;
 
 /**
  *
@@ -23,10 +23,13 @@ public class Picture {
     private String name;
     private String format;
     
-    private PictureDataInterface pictureDataAndInfo;
+    private PictureFormatInterface pictureDataAndInfo;
     
     private List<Pixel> data = new ArrayList();
     private Counter byteIndex;  // nth Byte
+    private Counter indexOfPixel;
+    private Counter indexOfChannel;
+    private Counter indexOfbite = null;
     private int chunkSize;
     
     public Picture(File picturePath) throws FileNotFoundException, IOException{
@@ -44,6 +47,8 @@ public class Picture {
         
         this.data = pictureDataAndInfo.getData();
         this.byteIndex = new Counter(data.size());
+        indexOfPixel = new Counter(data.size() * NUMBER_OF_CHANELS);
+        indexOfChannel = new Counter(NUMBER_OF_CHANELS);
     }
 
     public String getName() {
@@ -69,6 +74,7 @@ public class Picture {
     public void setChunkSize (int chunk) {
         if (chunk < 1) throw new IllegalArgumentException("Invalid chunk size!");
         this.chunkSize = chunk;
+        this.indexOfbite = new Counter(chunkSize);
     }
     
     private void setByteIndex (int index) {
@@ -107,31 +113,32 @@ public class Picture {
         pictureDataAndInfo.save2File(newFile);
     }
     
-    private byte nthBitFromRight(int B, int index) {
+    private byte nthBitFromRight (int B, int index) {
         return (byte)((B >> index) & 1);
     }
     
-    private byte nextByte () {
-        Counter indexOfPixel = new Counter(data.size()*NUMBER_OF_CHANELS);
-        Counter indexOfChannel = new Counter(NUMBER_OF_CHANELS);
-        Counter indexOfbite = new Counter(chunkSize);
+    private byte nthBitFromLeft (byte B, int index) {
+        return (byte)((B >> 7-index) & 1);
+    }
+    
+    private void calculateIndexes () {
         indexOfPixel.setNumber(byteIndex.getNumber()*BYTE_LEN / (NUMBER_OF_CHANELS*chunkSize));
         indexOfChannel.setNumber((byteIndex.getNumber()*BYTE_LEN % (NUMBER_OF_CHANELS*chunkSize)) / (chunkSize));
         indexOfbite.setNumber((byteIndex.getNumber()*BYTE_LEN) % (chunkSize));
+        /*
         System.out.format("Pixel: %d \t Chanel: %d \t bite: %d\n", 
                 indexOfPixel.getNumber(), indexOfChannel.getNumber(), indexOfbite.getNumber());
-        /*
-        int indexOfPixel = byteIndex.getNumber()*8 / (3*chunkSize);
-        int indexOfChanel = (byteIndex.getNumber()*8 % (3*chunkSize)) / (chunkSize);
-        int indexOfbite = (byteIndex.getNumber()*8) % (chunkSize);
-        System.out.format("Pixel: %d \t Chanel: %d \t bite: %d\n", indexOfPixel, indexOfChanel, indexOfbite);
         */
+    }
+    
+    private byte loadNextByte () {
         int carry;
         int ret = 0;
         Pixel pixel;
         int channel = -1;
         int bit;
         int nthBit;
+        calculateIndexes();
         for (int i = 0; i < BYTE_LEN; i++) {
             // find next bit
             pixel = data.get(indexOfPixel.getNumber());
@@ -163,15 +170,68 @@ public class Picture {
         return (byte)ret;
     }
     
-    private int nextInt () {
-        return nextByte() << 8 | nextByte();
+    private int loadNextInt () {
+        return loadNextByte() << 8 | loadNextByte();
+    }
+    
+    private void storeNextByte (byte B) {
+        int carry;
+        Pixel pixel;
+        int channel = -1;
+        int bit;
+        int nthBit;
+        calculateIndexes();
+        for (int i = 0; i < BYTE_LEN; i++) {
+            // find next bit
+            pixel = data.get(indexOfPixel.getNumber());
+            switch (indexOfChannel.getNumber()) {
+                case 0:
+                    channel = pixel.getR();
+                    break;
+                case 1:
+                    channel = pixel.getG();
+                    break;
+                case 2:
+                    channel = pixel.getB();
+                    break;
+                default:
+                    assert false : "Implementation error!";
+            }
+            // bit to store
+            bit = nthBitFromLeft(B, i);
+            // shifted to right position
+            nthBit = bit << (this.chunkSize - indexOfbite.getNumber());
+            // write bite to pixel chanel
+            channel = channel | nthBit;
+            switch (indexOfChannel.getNumber()) {
+                case 0:
+                    pixel.setR((byte) channel);
+                    break;
+                case 1:
+                    pixel.setG((byte) channel);
+                    break;
+                case 2:
+                    pixel.setB((byte) channel);
+                    break;
+                default:
+                    assert false : "Implementation error!";
+            }
+            
+            // move index to next bit
+            carry = indexOfbite.add();
+            carry = indexOfChannel.add(carry);
+            if (indexOfPixel.add(carry) != 0) throw new IndexOutOfBoundsException();
+        }
+        // next
+        byteIndex.add();
     }
 
     private boolean checkForHeader() {
+        setByteIndex(0);
         StringBuilder pictureContent = new StringBuilder();
         char nextChar;
         for (int i = 0; i < HEADER_KEY.length(); i++) {
-            nextChar = (char)(nextByte() & 0xFF);
+            nextChar = (char)(loadNextByte() & 0xFF);
             pictureContent.append(nextChar);
         }
         return HEADER_KEY.compareTo(pictureContent.toString()) == 0;
@@ -192,9 +252,23 @@ public class Picture {
         return dtfs;
     }
     
-    
     public boolean addFile(DataFile df) {
         if (df.getGrossSize() > canStorebites()) return false; // File is to big
+        byte B;
+        // check for file header
+        
+        // set link index
+        
+        // Header
+        for (int i = 0; i < df.getHeaderSize(); i++) {
+            B = df.getHeadByte(i);
+            storeNextByte(B);
+        }
+        // Data
+        for (int i = 0; i < df.getFileSize(); i++) {
+            B = df.getDataByte(i);
+            storeNextByte(B);
+        }
         return true;
     }
     
@@ -218,15 +292,15 @@ public class Picture {
         }
         p.setByteIndex(0);
         p.setChunkSize(4);
-        bytes.add(p.nextByte());
-        bytes.add(p.nextByte());
-        bytes.add(p.nextByte());
-        bytes.add(p.nextByte());
-        bytes.add(p.nextByte());
-        bytes.add(p.nextByte());
-        bytes.add(p.nextByte());
-        bytes.add(p.nextByte());
-        bytes.add(p.nextByte());
+        bytes.add(p.loadNextByte());
+        bytes.add(p.loadNextByte());
+        bytes.add(p.loadNextByte());
+        bytes.add(p.loadNextByte());
+        bytes.add(p.loadNextByte());
+        bytes.add(p.loadNextByte());
+        bytes.add(p.loadNextByte());
+        bytes.add(p.loadNextByte());
+        bytes.add(p.loadNextByte());
         for (int i = 0; i < bytes.size(); i++) {
             System.out.format("%s", byte2char(bytes.get(i)));
         }

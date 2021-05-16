@@ -10,7 +10,7 @@ import java.util.List;
  * 
  * @author pytel
  */
-public interface PictureDataInterface {
+public interface PictureFormatInterface {
     
     public void loadPicture(File path) throws FileNotFoundException, IOException;
     

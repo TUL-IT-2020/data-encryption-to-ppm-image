@@ -19,12 +19,11 @@ public class DataFile {
     // TODO sort by time
     
     public static int BYTE_LENGHT = 8;
-    private int ByteIndex;
-    private int BitIndex;
     private byte[] FileContent = null;
+    private byte[] HeaderContent = null;
 
     /**
-     * Load info about file to memory.
+     * Load info about file to memory from disk.
      * @param filePath
      * @throws FileNotFoundException 
      */
@@ -33,6 +32,15 @@ public class DataFile {
         this.file = filePath;
         this.name = filePath.getName().split("\\.")[0];
         this.format = "." + filePath.getName().split("\\.")[1];
+        generateHeader();
+    }
+    
+    /**
+     * Load info about file to memory from picture.
+     * @param header 
+     */
+    public DataFile(byte[] header) {
+        //TODO
     }
 
     public String getName() {
@@ -47,9 +55,12 @@ public class DataFile {
         return file.length();
     }
     
-    private void resetDataArrayPointers () {
-        BitIndex = 0;
-        ByteIndex = 0;
+    public long getHeaderSize() {
+        return this.HeaderContent.length;
+    }
+    
+    public long getGrossSize() {
+        return getHeaderSize() + getFileSize();
     }
 
     /**
@@ -65,7 +76,43 @@ public class DataFile {
             fis.read(FileContent);
         }
     }
+    
+    private void generateHeader () {
+        // TODO
+        // Byte ArrayList
+        // Int Header lenght 
+        // Int Name lenght
+        // Char[] Name
+        // Int Format lenght
+        // Char[] Format
+        // Int Data lenght
+        // Return ArrayList.toArray()
+    }
 
+    // TODO test it
+    public byte getDataByte (int index) {
+        return FileContent[index];
+    }
+    
+    // TODO test it
+    public byte getHeadByte (int index) {
+        return FileContent[index];
+    }
+
+    @Override
+    public String toString() {
+        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getFileSize() + '}';
+    }
+    
+    // ---- Unused ----
+    private int ByteIndex;
+    private int BitIndex;
+    
+    private void resetDataArrayPointers () {
+        BitIndex = 0;
+        ByteIndex = 0;
+    }
+    
     private byte nthBitFromLeft(byte B, int index) {
         //System.out.format("Shift: %s \t last: %s\n", Integer.toString(B >> 7-index,2), Integer.toString((B >> 7-index) & 1,2));
         return (byte)((B >> 7-index) & 1);
@@ -100,24 +147,5 @@ public class DataFile {
         }
         return bitArray;
     }
-    
-    // TODO test it
-    public byte getByte (int index) {
-        return FileContent[index];
-    }
 
-    @Override
-    public String toString() {
-        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getFileSize() + '}';
-    }
-
-    public long getGrossSize() {
-        return getHeaderSize() + getFileSize();
-    }
-
-    public long getHeaderSize() {
-        // TODO
-        return 0;
-    }
-    
 }

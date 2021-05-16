@@ -84,28 +84,39 @@ public class PictureAndDataTest {
     
     @Test
     public void storeFileToPicture() {
+        int chunk = 2;
         Picture picture;
         Picture newPicture;
         DataFile df;
         picture = loadPicture(pictures[1].picturePath);
+        
+        // test generate picture
         String newName = picture.getName() + "_generated" + picture.getFormat();
         File newFile = new File(pictures[1].path, newName);
-        //System.out.format("New name: %s\n", newName);
         try {
             picture.save(newName);
         } catch (IOException ex) {
             assert false : "ERROR: " + ex + "\n";
         }
         newPicture = loadPicture(newFile);
+        // load data file
         df = loadFile(files[0].filePath);
+        
+        // store file
+        newPicture.setChunkSize(chunk);
         assert (newPicture.addFile(df) ? 
                 newPicture.canStorebites() > df.getFileSize() : 
                 newPicture.canStorebites() < df.getFileSize()
                 ) : "ERROR";
+        
+        // is file stored?
+        DataFile[] dtfs = newPicture.storedFiles();
+        assert dtfs != null : "ERROR :did not store any files!";
+        for (DataFile dtf : dtfs) {
+            System.out.format("%s\n", dtf);
+        }
         // TODO
         // p.removeAllStored()
-        // 
-        // 
         newFile.delete();
     }
 }
