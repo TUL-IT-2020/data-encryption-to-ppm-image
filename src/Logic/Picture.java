@@ -2,6 +2,7 @@ package Logic;
 
 import Logic.PictureFormats.FormatPPM;
 import Tools.Counter;
+import static Tools.ByteTools.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -111,14 +112,6 @@ public class Picture {
         
         // save data
         pictureDataAndInfo.save2File(newFile);
-    }
-    
-    private byte nthBitFromRight (int B, int index) {
-        return (byte)((B >> index) & 1);
-    }
-    
-    private byte nthBitFromLeft (byte B, int index) {
-        return (byte)((B >> 7-index) & 1);
     }
     
     private void calculateIndexes () {
@@ -272,9 +265,6 @@ public class Picture {
         return true;
     }
     
-    private static char byte2char (byte B) {
-        return (char)(B & 0xFF);
-    }
     /**
      * Private metode test helper.
      * @param args the command line arguments
