@@ -41,4 +41,19 @@ public class ByteToolsTest {
         }
     }
     
+    @Test
+    public void nthBitFromLeftTest() {
+        int[][] data = {
+            {170, 1,0,1,0, 1,0,1,0}
+        };
+        byte bit;
+        for (int[] input : data) {
+            for (int i = 0; i < 8; i++) {
+                bit = nthBitFromLeft((byte)input[0], i);
+                //System.out.format("new: %8.8s\t", Integer.toString((channel & ~mask) | nthBit & 0xFF,2));
+                System.out.format("%d -> %d index\n", bit, i);
+                assertEquals(input[i+1], (int)bit);
+            }
+        }
+    }
 }

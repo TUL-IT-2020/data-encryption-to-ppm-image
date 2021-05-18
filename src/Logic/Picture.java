@@ -119,10 +119,10 @@ public class Picture {
         indexOfPixel.setNumber(byteIndex.getNumber()*BYTE_LENGHT / (NUMBER_OF_CHANELS*chunkSize));
         indexOfChannel.setNumber((byteIndex.getNumber()*BYTE_LENGHT % (NUMBER_OF_CHANELS*chunkSize)) / (chunkSize));
         indexOfbite.setNumber((byteIndex.getNumber()*BYTE_LENGHT) % (chunkSize));
-        /*
+        
         System.out.format("Pixel: %d \t Chanel: %d \t bite: %d\n", 
                 indexOfPixel.getNumber(), indexOfChannel.getNumber(), indexOfbite.getNumber());
-        */
+        
     }
     
     private byte loadNextByte () {
@@ -177,10 +177,13 @@ public class Picture {
     }
     
     private void storeNextByte (byte B) {
+        System.out.format("Byte to store: %8.8s\n", Integer.toString(B & 0xFF,2));
         int carry;
         Pixel pixel;
         int channel = -1;
         int bit;
+        int mask;
+        int position;
         int nthBit;
         calculateIndexes();
         for (int i = 0; i < BYTE_LENGHT; i++) {
@@ -202,9 +205,16 @@ public class Picture {
             // bit to store
             bit = nthBitFromLeft(B, i);
             // shifted to right position
-            nthBit = bit << (this.chunkSize - indexOfbite.getNumber());
+            position = this.chunkSize - indexOfbite.getNumber() -1;
+            mask = 1 << position;
+            nthBit = bit << position;
             // write bite to pixel chanel
-            channel = channel | nthBit;
+            System.out.format("old: %8.8s\t", Integer.toString(channel & 0xFF,2));
+            System.out.format("Masked: %8.8s\t", Integer.toString(channel & ~mask & 0xFF,2));
+            System.out.format("new: %8.8s\t", Integer.toString(((channel & ~mask) | nthBit) & 0xFF,2));
+            System.out.format("%d -> %d shift to %d index, chanel %d\n", bit, position, indexOfbite.getNumber(), indexOfChannel.getNumber());
+            
+            channel = (channel & ~mask) | nthBit;
             switch (indexOfChannel.getNumber()) {
                 case 0:
                     pixel.setR((byte) channel);
@@ -218,6 +228,8 @@ public class Picture {
                 default:
                     assert false : "Implementation error!";
             }
+            // store modified pixel
+            data.set(indexOfPixel.getNumber(), pixel);
             
             // move index to next bit
             carry = indexOfbite.add();
@@ -247,10 +259,19 @@ public class Picture {
     
     private boolean createAndStoreHeader () {
         // TODO check if key fit to file !!!
+        setByteIndex(0);
         byte[] array = HEADER_KEY.getBytes();
         for (byte B : array) {
             storeNextByte(B);
         }
+        for (byte B : array) {
+            System.out.format(" %d \n", (int)B);
+        }
+        System.out.format(" %d %d \n", data.get(0).getR(), data.get(0).getG());
+        /*
+        for (int i = 0; i < HEADER_KEY.length()/NUMBER_OF_CHANELS; i++) {
+            System.out.format(" %s \n", data.get(i));
+        }*/
         return true;
     }
     
@@ -352,6 +373,8 @@ public class Picture {
         int LinkByteIndex = addNextLink();
         setByteIndex(LinkByteIndex);
         
+        return false;
+        
         // chain termination
         storeNextNBytes(int2Bytes(-1));
         
@@ -383,7 +406,7 @@ public class Picture {
             assert false : "Iner ERROR";
         }
         p.setByteIndex(0);
-        p.setChunkSize(4);
+        p.setChunkSize(8);
         bytes.add(p.loadNextByte());
         bytes.add(p.loadNextByte());
         bytes.add(p.loadNextByte());

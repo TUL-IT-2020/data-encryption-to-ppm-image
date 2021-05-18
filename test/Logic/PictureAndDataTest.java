@@ -5,8 +5,6 @@ import static Logic.TestData.files;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -85,13 +83,18 @@ public class PictureAndDataTest {
         }
     }
     
-    @Test
+    //@Test
     public void storeFileToPicture() {
         int chunk = 2;
         DataFile df;
         Picture picture = loadPicture(pictures[1].picturePath);
         // load data file
         df = loadFile(files[0].filePath);
+        
+        // can I store the file?
+        picture.setChunkSize(chunk);
+        assert picture.canStorebites() > df.getGrossSize() : 
+                "File is to big! " + picture.canStorebites() + " < "+ df.getGrossSize();
         
         // store file
         picture.setChunkSize(chunk);
@@ -112,9 +115,9 @@ public class PictureAndDataTest {
         }
     }
     
-    //@Test
+    @Test
     public void storeFileToPictureAndSaveIt() {
-        int chunk = 2;
+        int chunk = 8;
         Picture picture;
         Picture newPicture;
         DataFile df;

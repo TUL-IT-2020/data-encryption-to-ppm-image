@@ -30,8 +30,8 @@ public class Counter {
     }
 
     public int add(int number) {
-        this.number = (this.number + number) % size;
         int carry = (this.number + number) / size;
+        this.number = (this.number + number) % size;        
         return carry;
     }
 }
