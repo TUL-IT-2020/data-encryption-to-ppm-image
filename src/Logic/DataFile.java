@@ -97,12 +97,6 @@ public class DataFile {
         }
     }
     
-    private void add2List (List list, byte[] bytes) {
-        for (byte B : bytes) {
-            list.add(B);
-        }
-    }
-    
     private void generateHeader () {
         byte[] array;
         // Byte ArrayList

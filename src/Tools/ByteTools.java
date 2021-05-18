@@ -10,6 +10,13 @@ import java.util.List;
  */
 public class ByteTools {
     
+    
+    public static void add2List (List list, byte[] bytes) {
+        for (byte B : bytes) {
+            list.add(B);
+        }
+    }
+    
     public static char byte2char (byte B) {
         return (char)(B & 0xFF);
     }
