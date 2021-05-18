@@ -51,12 +51,13 @@ public class UI {
         System.out.format("\t 1) Vybrat formát: %s\n", format);
         System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
         System.out.format("\t 3) Vybrat velikost chunku: %d.\n", chunkSize);
-        System.out.format("\t 4) Vypsat obsah dle: %s.\n", sortingType);
-        System.out.format("\t 5) Přidat soubor do obrázku.\n");
-        System.out.format("\t 6) Nahrát soubor z obrázku.\n");
-        System.out.format("\t 7) Smazat záznamy.\n");
-        System.out.format("\t 8) Provést/Uložit.\n");
-        System.out.format("\t 9) Odejít.\n");
+        System.out.format("\t 4) Vybrat typ třídění.\n");
+        System.out.format("\t 5) Vypsat obsah dle: %s.\n", sortingType);
+        System.out.format("\t 6) Přidat soubor do obrázku.\n");
+        System.out.format("\t 7) Uložit soubor z obrázku.\n");
+        System.out.format("\t 8) Smazat záznamy.\n");
+        System.out.format("\t 9) Provést/Uložit.\n");
+        System.out.format("\t 10) Odejít.\n");
         System.out.print("Zadej volbu: ");
     }
 

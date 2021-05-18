@@ -5,6 +5,8 @@ import static Logic.TestData.files;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -47,11 +49,12 @@ public class PictureAndDataTest {
             p.setChunkSize(depthPerChannel);
             for (TestData.TestFileData file : files) {
                 df = loadFile(file.filePath);
+                /*
                 System.out.format("File: %s %s fit to picture: %s.\n", 
                         file.name,
                         p.canStorebites() > df.getGrossSize()*8 ? "wil" : "wont",
                         picture.name
-                        );
+                        );*/
             }
         }
     }
@@ -64,7 +67,7 @@ public class PictureAndDataTest {
         p = loadPicture(pictures[1].picturePath);
         p.setChunkSize(chunk);
         number = p.getNumberOfStoredFiles();
-        assertEquals(number, -1);
+        assertEquals(-1, number);
     }
     
     @Test
@@ -84,6 +87,33 @@ public class PictureAndDataTest {
     
     @Test
     public void storeFileToPicture() {
+        int chunk = 2;
+        DataFile df;
+        Picture picture = loadPicture(pictures[1].picturePath);
+        // load data file
+        df = loadFile(files[0].filePath);
+        
+        // store file
+        picture.setChunkSize(chunk);
+        assert (picture.addFile(df) ? 
+                picture.canStorebites() > df.getGrossSize() : 
+                picture.canStorebites() < df.getGrossSize()
+                ) : "ERROR";
+        
+        // is file stored?
+        int number = picture.getNumberOfStoredFiles();
+        assertEquals("Number of stored files: " + number, 1, number);
+        
+        // load file content
+        DataFile[] dtfs = picture.storedFiles();
+        assert dtfs != null : "ERROR : did not store any files!";
+        for (DataFile dtf : dtfs) {
+            System.out.format("%s\n", dtf);
+        }
+    }
+    
+    //@Test
+    public void storeFileToPictureAndSaveIt() {
         int chunk = 2;
         Picture picture;
         Picture newPicture;
@@ -108,6 +138,13 @@ public class PictureAndDataTest {
                 newPicture.canStorebites() > df.getGrossSize() : 
                 newPicture.canStorebites() < df.getGrossSize()
                 ) : "ERROR";
+        
+        // save file to disk
+        try {
+            newPicture.save(newName);
+        } catch (IOException ex) {
+            assert false : "ERROR: " + ex;
+        }
         
         // is file stored?
         DataFile[] dtfs = newPicture.storedFiles();

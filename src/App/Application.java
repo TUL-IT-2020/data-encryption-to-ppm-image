@@ -85,10 +85,13 @@ public class Application {
                 case 3:
                     selectChunnkSize();
                     break;
-                case 4: // Sort & print
+                case 4: // select sorting type
                     
                     break;
-                case 5: // Add file
+                case 5: // Sort & print
+                    
+                    break;
+                case 6: // Add file
                     files = UI.listAllFiles(dataDir);
                     index = UI.readInt()-1;
                     if (picture == null) {
@@ -107,24 +110,24 @@ public class Application {
                         UI.printInvaliInput();
                     }
                     break;
-                case 6: // Load File from picture
+                case 7: // Load File from picture
                     if (picture == null) {
                         UI.print("Obrázek není vybrán!");
                     } else {
                         //datafiles = picture.storedFiles();
                     }
                     break;
-                case 7: // delete all records
+                case 8: // delete all records
                     if (picture == null) {
                         UI.print("Obrázek není vybrán!");
                     } else {
                         //picture.removeAllStored();
                     }
                     break;
-                case 8: // Aply !
+                case 9: // Aply !
                     
                     break;
-                case 9: // Quit
+                case 10: // Quit
                     exit = true;
                     break;
                 default:

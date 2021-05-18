@@ -3,9 +3,7 @@ package Logic;
 import Logic.TestData.TestFileData;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -51,9 +49,9 @@ public class DataFileTest {
     public void GetFileSize() {
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
-            //System.out.format("File Size: %d\n", df.getFileSize());
-            assert df.getFileSize() == file.size : "Invalid size: "
-                    + df.getFileSize() + " != " + file.size;
+            //System.out.format("File Size: %d\n", df.getDataSize());
+            assert df.getDataSize() == file.size : "Invalid size: "
+                    + df.getDataSize() + " != " + file.size;
         }
     }
 
@@ -62,7 +60,7 @@ public class DataFileTest {
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
             int chunk = 8;
-            for (int i = 0; i < df.getFileSize() * 8 / chunk; i++) {
+            for (int i = 0; i < df.getDataSize() * 8 / chunk; i++) {
                 // TODO test it
                 //System.out.format("Chunk content: %s\n", (char) (df.getNextNbites(chunk) & 0xFF));
             }
@@ -73,7 +71,7 @@ public class DataFileTest {
     public void TestGetDataBytes() {
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
-            for (int i = 0; i < df.getFileSize(); i++) {
+            for (int i = 0; i < df.getDataSize(); i++) {
                 //System.out.format("Byte content: %s\n", (char) (df.getDataByte(i) & 0xFF));
             }
         }
@@ -85,6 +83,7 @@ public class DataFileTest {
         DataFile df;
         DataFile ndf;
         byte[] header;
+        byte[] data;
         for (TestFileData file : files) {
             df = loadFile(file.filePath);
             // read header Bytes
@@ -95,11 +94,16 @@ public class DataFileTest {
             // create file from Bytes header
             int startIndex = 2*4;
             header = new byte[(int)df.getHeaderSize()-startIndex];
+            data = new byte[(int)df.getDataSize()];
             for (int i = startIndex; i < df.getHeaderSize(); i++) {
                 header[i-startIndex] = df.getHeadByte(i);
             }
-            ndf = new DataFile(header);
+            for (int i = 0; i < df.getDataSize(); i++) {
+                data[i] = df.getDataByte(i);
+            }
+            ndf = new DataFile(header, data);
             System.out.format("%s\n", ndf);
+            Assert.assertEquals(ndf.getName(), df.getName());
         }
     }
 
