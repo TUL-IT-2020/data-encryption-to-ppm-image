@@ -39,7 +39,7 @@ public class DataFile {
             ReadFile();
             generateHeader();
         } catch (IOException ex) {
-            assert true : "File / implementation error.";
+            assert false : "File / implementation error.";
         }
     }
     

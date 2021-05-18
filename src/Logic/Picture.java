@@ -219,7 +219,7 @@ public class Picture {
         byteIndex.add();
     }
 
-    private boolean checkForHeader() {
+    private boolean checkForHeader () {
         setByteIndex(0);
         StringBuilder pictureContent = new StringBuilder();
         char nextChar;
@@ -228,6 +228,15 @@ public class Picture {
             pictureContent.append(nextChar);
         }
         return HEADER_KEY.compareTo(pictureContent.toString()) == 0;
+    }
+    
+    private boolean createAndStoreHeader () {
+        // TODO check if key fit to file !!!
+        byte[] array = HEADER_KEY.getBytes();
+        for (byte B : array) {
+            storeNextByte(B);
+        }
+        return true;
     }
     
     public int getNumberOfStoredFiles () {
@@ -245,12 +254,22 @@ public class Picture {
         return dtfs;
     }
     
+    private int addNextLink () {
+        // TODO
+        int ByteIndex = findStoredFile(-1); // return index of file link to chain
+        return -1;
+    }
+    
     public boolean addFile(DataFile df) {
         if (df.getGrossSize() > canStorebites()) return false; // File is to big
         byte B;
         // check for file header
-        
+        if (!checkForHeader()) {    // nema zatim hlavicku
+            createAndStoreHeader();
+        }
         // set link index
+        int LinkByteIndex = addNextLink();
+        setByteIndex(LinkByteIndex);
         
         // Header
         for (int i = 0; i < df.getHeaderSize(); i++) {
