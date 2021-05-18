@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import Logic.PictureFormats.PictureFormatInterface;
+import Tools.ByteTools;
 
 /**
  *
@@ -16,9 +17,9 @@ import Logic.PictureFormats.PictureFormatInterface;
  */
 public class Picture {
 
-    private static final String HEADER_KEY = "42";    // TODO chenge it
+    private static final String HEADER_KEY = "42";    // TODO chenge it ASCII !!!
     private static final int NUMBER_OF_CHANELS = 3;
-    private static final int BYTE_LEN = 8;
+    private static final int BYTE_LEN = ByteTools.BYTE_LENGHT;
     
     private File path;
     private String name;
@@ -164,7 +165,7 @@ public class Picture {
     }
     
     private int loadNextInt () {
-        return loadNextByte() << 8 | loadNextByte();
+        return loadNextByte() << 24 | loadNextByte() << 16 | loadNextByte() << 8 | loadNextByte();
     }
     
     private void storeNextByte (byte B) {
@@ -239,6 +240,10 @@ public class Picture {
         return true;
     }
     
+    private int getFirstLinkByteIndex () {
+        return HEADER_KEY.length();
+    }
+    
     public int getNumberOfStoredFiles () {
         if (!checkForHeader()) return -1;
         // TODO
@@ -252,6 +257,39 @@ public class Picture {
         }
         // TODO
         return dtfs;
+    }
+    
+    public int[] getStoredFileLinks () {
+        if (!checkForHeader()) {
+            return null;
+        }
+        int linkIndex;
+        List<Integer> links = new ArrayList();
+        // set ByteIndexToFirstLink
+        linkIndex = getFirstLinkByteIndex();
+        setByteIndex(linkIndex);
+        // store first link index
+        links.add(linkIndex);
+        while ((linkIndex = loadNextInt()) != -1) {
+            setByteIndex(linkIndex);
+            links.add(linkIndex);
+        }
+        return links.stream().mapToInt(i->i).toArray();
+    }
+    
+    /**
+     * If file do not exist return -1.
+     * If picture contain none files return -1;
+     * If asked for invalid index return -1;
+     * @param index of nth file
+     * @return ByteIndex of nth file.
+     */
+    public int findStoredFile (int index) {
+        int[] links = getStoredFileLinks ();
+        if (links == null) return -1;
+        if (index >= links.length) return -1;
+        if (index == -1) index = links.length;
+        return links[index];
     }
     
     private int addNextLink () {

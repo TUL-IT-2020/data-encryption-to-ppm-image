@@ -57,7 +57,7 @@ public class PictureAndDataTest {
     }
     
     @Test
-    public void numberOfStoredFilesInPicture() {
+    public void numberOfStoredFilesInEmptyPicture() {
         int number;
         int chunk = 1;
         Picture p;
@@ -68,7 +68,7 @@ public class PictureAndDataTest {
     }
     
     @Test
-    public void listStoredFilesInPicture() {
+    public void listStoredFilesInEpmtyPicture() {
         int chunk = 1;
         Picture p;
         DataFile[] dtfs;
@@ -90,13 +90,13 @@ public class PictureAndDataTest {
         DataFile df;
         picture = loadPicture(pictures[1].picturePath);
         
-        // test generate picture
+        // generate test picture
         String newName = picture.getName() + "_generated" + picture.getFormat();
         File newFile = new File(pictures[1].path, newName);
         try {
             picture.save(newName);
         } catch (IOException ex) {
-            assert false : "ERROR: " + ex + "\n";
+            assert false : "ERROR: " + ex;
         }
         newPicture = loadPicture(newFile);
         // load data file
@@ -105,13 +105,13 @@ public class PictureAndDataTest {
         // store file
         newPicture.setChunkSize(chunk);
         assert (newPicture.addFile(df) ? 
-                newPicture.canStorebites() > df.getFileSize() : 
-                newPicture.canStorebites() < df.getFileSize()
+                newPicture.canStorebites() > df.getGrossSize() : 
+                newPicture.canStorebites() < df.getGrossSize()
                 ) : "ERROR";
         
         // is file stored?
         DataFile[] dtfs = newPicture.storedFiles();
-        assert dtfs != null : "ERROR :did not store any files!";
+        assert dtfs != null : "ERROR : did not store any files!";
         for (DataFile dtf : dtfs) {
             System.out.format("%s\n", dtf);
         }

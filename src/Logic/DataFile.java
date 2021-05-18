@@ -1,5 +1,6 @@
 package Logic;
 
+import Tools.ByteTools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,7 +22,7 @@ public class DataFile {
     // TODO sort by size
     // TODO sort by time
     
-    public static int BYTE_LENGHT = 8;
+    public static int BYTE_LEN = ByteTools.BYTE_LENGHT;
     private byte[] FileContent = null;
     private Byte[] HeaderContent = null;
 
@@ -72,6 +73,7 @@ public class DataFile {
      * @return 
      */
     public long getFileSize() {
+        if (file == null) return -1;
         return file.length();
     }
     
@@ -137,7 +139,7 @@ public class DataFile {
     
     // TODO test it
     public byte getHeadByte (int index) {
-        return FileContent[index];
+        return HeaderContent[index];
     }
 
     @Override
@@ -166,7 +168,7 @@ public class DataFile {
         byte B;
         for (int i = 0; i < chunkSize; i++) {
             // TODO max index cap !!!
-            if (BitIndex >= BYTE_LENGHT) {
+            if (BitIndex >= BYTE_LEN) {
                 ByteIndex += 1;
                 BitIndex = 0;
             }

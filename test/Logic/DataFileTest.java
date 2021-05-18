@@ -4,6 +4,8 @@ import Logic.TestData.TestFileData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -61,8 +63,43 @@ public class DataFileTest {
             DataFile df = loadFile(file.filePath);
             int chunk = 8;
             for (int i = 0; i < df.getFileSize() * 8 / chunk; i++) {
-                System.out.format("Chunk content: %s\n", (char) (df.getNextNbites(chunk) & 0xFF));
+                // TODO test it
+                //System.out.format("Chunk content: %s\n", (char) (df.getNextNbites(chunk) & 0xFF));
             }
+        }
+    }
+    
+    @Test
+    public void TestGetDataBytes() {
+        for (TestFileData file : files) {
+            DataFile df = loadFile(file.filePath);
+            for (int i = 0; i < df.getFileSize(); i++) {
+                //System.out.format("Byte content: %s\n", (char) (df.getDataByte(i) & 0xFF));
+            }
+        }
+    }
+    
+    @Test
+    public void TestGetHeadBytes() {
+        byte B;
+        DataFile df;
+        DataFile ndf;
+        byte[] header;
+        for (TestFileData file : files) {
+            df = loadFile(file.filePath);
+            // read header Bytes
+            for (int i = 0; i < df.getHeaderSize(); i++) {
+                B = df.getHeadByte(i);
+                System.out.format("Byte content: %s\n", (char) (B & 0xFF));
+            }
+            // create file from Bytes header
+            int startIndex = 2*4;
+            header = new byte[(int)df.getHeaderSize()-startIndex];
+            for (int i = startIndex; i < df.getHeaderSize(); i++) {
+                header[i-startIndex] = df.getHeadByte(i);
+            }
+            ndf = new DataFile(header);
+            System.out.format("%s\n", ndf);
         }
     }
 

@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class ByteTools {
     
+    public static final int BYTE_LENGHT = 8;
     
     public static void add2List (List list, byte[] bytes) {
         for (byte B : bytes) {
