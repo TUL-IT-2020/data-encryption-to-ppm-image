@@ -4,11 +4,11 @@ package Logic;
  * Store data internali as signed Byte.
  * @author pytel
  */
-class Pixel {
+public class Pixel {
     
-    byte R;
-    byte G;
-    byte B;
+    private byte R;
+    private byte G;
+    private byte B;
 
     public Pixel(byte R, byte G, byte B) {
         this.R = R;

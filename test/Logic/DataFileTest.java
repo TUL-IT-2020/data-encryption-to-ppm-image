@@ -56,31 +56,12 @@ public class DataFileTest {
     }
 
     @Test
-    public void TestReadFile() {
-        for (TestFileData file : files) {
-            DataFile df = loadFile(file.filePath);
-            try {
-                df.ReadFile();
-            } catch (IOException ex) {
-                System.out.format("ERROR: %s\n", ex);
-            }
-        }
-    }
-
-    @Test
     public void TestGetNBites() {
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
             int chunk = 8;
-            try {
-                df.ReadFile();
-                for (int i = 0; i < df.getFileSize() * 8 / chunk; i++) {
-                    System.out.format("Chunk content: %s\n", (char) (df.getNextNbites(chunk) & 0xFF));
-                }
-                //assert df.getFileSize() == size : "Invalid size: " +
-                //        df.getFileSize() + " != " + size;
-            } catch (IOException ex) {
-                System.out.format("ERROR: %s\n", ex);
+            for (int i = 0; i < df.getFileSize() * 8 / chunk; i++) {
+                System.out.format("Chunk content: %s\n", (char) (df.getNextNbites(chunk) & 0xFF));
             }
         }
     }

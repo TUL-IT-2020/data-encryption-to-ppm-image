@@ -1,5 +1,6 @@
-package Logic;
+package Logic.PictureFormats;
 
+import Logic.Pixel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.List;
  * 
  * @author pytel
  */
-public interface PictureDataInterface {
+public interface PictureFormatInterface {
     
     public void loadPicture(File path) throws FileNotFoundException, IOException;
     

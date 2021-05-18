@@ -109,9 +109,10 @@ public class PictureTest {
         long calculatedCapacity;
         for (TestPictureData picture : pictures) {
             p = loadPicture(picture.picturePath);
+            p.setChunkSize(depthPerChannel);
             calculatedCapacity = 3*picture.width*picture.height*depthPerChannel;
-            assert p.canStorebites(depthPerChannel) == calculatedCapacity: "Invalid size to store: " + 
-                    p.canStorebites(depthPerChannel) + " != " + calculatedCapacity;
+            assert p.canStorebites() == calculatedCapacity: "Invalid size to store: " + 
+                    p.canStorebites() + " != " + calculatedCapacity;
         }
     }
     

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import static Tools.ByteTools.*;
 
 /**
  * Class stroting information to store/load from picture.
@@ -19,20 +22,45 @@ public class DataFile {
     // TODO sort by time
     
     public static int BYTE_LENGHT = 8;
-    private int ByteIndex;
-    private int BitIndex;
     private byte[] FileContent = null;
+    private Byte[] HeaderContent = null;
 
-    /**
-     * Load info about file to memory.
-     * @param filePath
+    /** 
+     * Load info about file to memory from disk. 
+     * @param filePath 
      * @throws FileNotFoundException 
-     */
+     */ 
     public DataFile(File filePath) throws FileNotFoundException {
         if (!filePath.exists()) throw new FileNotFoundException();
         this.file = filePath;
         this.name = filePath.getName().split("\\.")[0];
         this.format = "." + filePath.getName().split("\\.")[1];
+        try {
+            ReadFile();
+            generateHeader();
+        } catch (IOException ex) {
+            assert false : "File / implementation error.";
+        }
+    }
+    
+    /**
+     * Load info about file to memory from picture. 
+     * @param header 
+     */
+    public DataFile(byte[] header) {
+        //TODO
+        List<Byte> Bytes = new ArrayList();
+        add2List(Bytes, header);
+        
+        // name lenght
+        int stringLenght = nextInt(Bytes);
+        // name string
+        this.name = nextString(Bytes, stringLenght);
+        
+        // format lenght
+        stringLenght = nextInt(Bytes);
+        // format string
+        this.format = nextString(Bytes, stringLenght);
     }
 
     public String getName() {
@@ -47,15 +75,18 @@ public class DataFile {
         return file.length();
     }
     
-    private void resetDataArrayPointers () {
-        BitIndex = 0;
-        ByteIndex = 0;
+    public long getHeaderSize() {
+        return this.HeaderContent.length;
+    }
+    
+    public long getGrossSize() {
+        return getHeaderSize() + getFileSize();
     }
 
     /**
      * Load file content to memory.
      */
-    void ReadFile() throws FileNotFoundException, IOException {
+    private void ReadFile() throws FileNotFoundException, IOException {
         resetDataArrayPointers();
         
         // TODO change, nead lot of memory!!!
@@ -65,14 +96,62 @@ public class DataFile {
             fis.read(FileContent);
         }
     }
+    
+    private void generateHeader () {
+        byte[] array;
+        // Byte ArrayList
+        List<Byte> Bytes = new ArrayList();
+        
+        // Int Header lenght
+        // --- first index !!!
+        
+        // Int Data lenght
+        add2List(Bytes, int2Bytes((int)this.getFileSize()));
+        
+        // Int Name lenght
+        array = this.name.getBytes();
+        add2List(Bytes, int2Bytes(array.length));
+        // Char[] Name
+        add2List(Bytes, array);
+        
+        // Int Format lenght
+        array = this.format.getBytes();
+        add2List(Bytes, int2Bytes(array.length));
+        // Char[] Format
+        add2List(Bytes, array);
+        
+        // insert Header lenght to begining
+        byte[] headerLenght = int2Bytes(Bytes.size() + 4);   // 4 - Int lenght
+        for (int i = 0; i < headerLenght.length; i++) {
+            Bytes.add(i, headerLenght[i]);
+        }
+        
+        // Return ArrayList.toArray()
+        HeaderContent = Bytes.toArray(new Byte[Bytes.size()]);
+    }
 
-    private byte nthBitFromLeft(byte B, int index) {
-        //System.out.format("Shift: %s \t last: %s\n", Integer.toString(B >> 7-index,2), Integer.toString((B >> 7-index) & 1,2));
-        return (byte)((B >> 7-index) & 1);
+    // TODO test it
+    public byte getDataByte (int index) {
+        return FileContent[index];
     }
     
-    private char byte2char (byte B) {
-        return (char)(B & 0xFF);
+    // TODO test it
+    public byte getHeadByte (int index) {
+        return FileContent[index];
+    }
+
+    @Override
+    public String toString() {
+        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getFileSize() + '}';
+    }
+    
+    // ---- Unused ----
+    private int ByteIndex;
+    private int BitIndex;
+    
+    private void resetDataArrayPointers () {
+        BitIndex = 0;
+        ByteIndex = 0;
     }
     
     /**
@@ -100,15 +179,5 @@ public class DataFile {
         }
         return bitArray;
     }
-    
-    // TODO test it
-    public byte getByte (int index) {
-        return FileContent[index];
-    }
 
-    @Override
-    public String toString() {
-        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getFileSize() + '}';
-    }
-    
 }
