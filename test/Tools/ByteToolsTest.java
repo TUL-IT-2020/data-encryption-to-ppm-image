@@ -56,4 +56,12 @@ public class ByteToolsTest {
             }
         }
     }
+    
+    @Test
+    public void int2bin() {
+        int len = 8;
+        for (int i = 0; i < 256; i++) {
+            //System.out.format(" %s\n", int2BinString(i, len));
+        }
+    }
 }

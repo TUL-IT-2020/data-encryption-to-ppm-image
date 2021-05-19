@@ -19,6 +19,20 @@ public class ByteTools {
         }
     }
     
+    private static String toBinString (int n) {
+        if (n <= 1) return String.valueOf(n);
+        return toBinString(n/2) + toBinString(n%2);
+    }
+    
+    public static String int2BinString (int n, int len) {
+        String bin = toBinString(n);
+        String zeros = new String();
+        for (int i = 0; i < len - bin.length(); i++) {
+            zeros += String.valueOf(0);
+        }
+        return zeros + bin;
+    }
+    
     public static char byte2char (byte B) {
         return (char)(B & 0xFF);
     }

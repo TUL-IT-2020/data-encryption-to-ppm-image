@@ -47,7 +47,13 @@ public class TestData {
     public static TestFileData[] files = {
         new TestFileData(
                 new File(System.getProperty("user.dir") + "/Data/testDataSet"),
-                "test", ".txt", 6)
+                "test", ".txt", 6),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                "soubor1", ".txt", 5),
+        /*new TestFileData(
+                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                "dalsi_soubor", ".txt", 80)*/
     };
     
     static class TestFileData {

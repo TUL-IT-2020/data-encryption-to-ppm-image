@@ -46,7 +46,6 @@ public class UI {
     }
 
     public static void loadFromPictureMenu(String format, Picture picture, int chunkSize, String sortingType) {
-        
         System.out.println(" --- Hlavní menu ---");
         System.out.format("\t 1) Vybrat formát: %s\n", format);
         System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
@@ -67,6 +66,12 @@ public class UI {
             System.out.format("\t %d) %s\n", i+1, PICTURE_FORMATS[i]);
         }
         System.out.print("Zadej volbu: ");
+    }
+    
+    public static String choseNewPictureName () {
+        System.out.print("Zadej nový název obrázku: ");
+        String name = sc.nextLine();
+        return name;
     }
 
     public static File[] listAllFiles(File dir) {
