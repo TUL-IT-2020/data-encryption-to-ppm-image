@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import static Tools.ByteTools.*;
+import java.io.FileWriter;
 
 /**
  * Class stroting information to store/load from picture.
@@ -68,6 +69,11 @@ public class DataFile {
 
     public String getName() {
         return name;
+    }
+
+    // TODO test it
+    public String getFormat() {
+        return format;
     }
 
     /**
@@ -148,6 +154,13 @@ public class DataFile {
     // TODO test it
     public byte getHeadByte (int index) {
         return HeaderContent[index];
+    }
+    
+    // TODO test it
+    public void save2File(File path) throws FileNotFoundException, IOException {
+        try (FileWriter fw = new FileWriter(path)) {
+            // TODO
+        }
     }
 
     @Override

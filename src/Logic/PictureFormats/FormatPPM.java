@@ -15,9 +15,9 @@ import Logic.PictureFormats.PictureFormatInterface;
  *
  * @author pytel
  */
-public class FormatPPM implements PictureFormatInterface{
+public class FormatPPM implements PictureFormatInterface {
     
-    private static int MAX_VALUE = 255;
+    private static final int MAX_VALUE = 255;
     private String MagicNumber;
     private int width;
     private int height;

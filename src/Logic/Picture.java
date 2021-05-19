@@ -19,6 +19,12 @@ public class Picture {
     private static final String HEADER_KEY = "42";    // TODO chenge it ASCII !!!
     private static final int NUMBER_OF_CHANELS = 3;
     
+    // chain link value
+    private static final int EMPTY = -1;
+    private static final int LAST = 0;
+    
+    private static final boolean DEBUG = true;
+    
     private File path;
     private String name;
     private String format;
@@ -74,7 +80,8 @@ public class Picture {
     public void setChunkSize (int chunk) {
         if (chunk < 1 || chunkSize > 8) throw new IllegalArgumentException("Invalid chunk size!");
         this.chunkSize = chunk;
-        this.indexOfbite = new Counter(chunkSize);
+        this.indexOfbite = new Counter(chunk);
+        //System.out.format("Counter size set to: %d.\n", this.chunkSize);
     }
     
     private void setByteIndex (int index) {
@@ -94,24 +101,16 @@ public class Picture {
         return capacity;
     }
     
-    private boolean createNewFile (File file) throws IOException {
-        if (file.exists()) {
-            // file already exist, removing file.
-            file.delete();
-        }
-        return file.createNewFile();
+    public boolean isPictureEmpty() {
+        setByteIndex(getFirstLinkByteIndex());
+        return loadNextInt() == EMPTY;
     }
 
-    public void save(String newName) throws IOException{
-        // create file
-        File newFile = new File(path.getParentFile(), newName);
-        //System.out.format("New file: %s\n", newFile.getAbsoluteFile());
-        createNewFile(newFile);
-        
+    public void save2File(File newFile) throws IOException {
         // store data
         pictureDataAndInfo.setData(data);
         
-        // save data
+        // save2File data
         pictureDataAndInfo.save2File(newFile);
     }
     
@@ -131,6 +130,7 @@ public class Picture {
         Pixel pixel;
         int channel = -1;
         int bit;
+        int position;
         int nthBit;
         calculateIndexes();
         for (int i = 0; i < BYTE_LENGHT; i++) {
@@ -149,10 +149,17 @@ public class Picture {
                 default:
                     assert false : "Implementation error!";
             }
-            bit = nthBitFromRight(channel, this.chunkSize - indexOfbite.getNumber());
-            
-            nthBit = bit << BYTE_LENGHT-i-1;
+            bit = nthBitFromRight(channel, this.chunkSize - indexOfbite.getNumber() -1);
+            position = BYTE_LENGHT-i-1;
+            nthBit = bit << position;
             ret = ret | nthBit;
+            
+            System.out.format("Bit index size: %d\t", indexOfbite.getSize());
+            
+            
+            System.out.format("old: %8.8s\t", Integer.toString(channel & 0xFF,2));
+            System.out.format("new: %8.8s\t", Integer.toString((ret | nthBit) & 0xFF,2));
+            System.out.format("%d -> %d, bit %d, chanel %d index.\n", bit, position, indexOfbite.getNumber(), indexOfChannel.getNumber());
             
             // move index to next bit
             carry = indexOfbite.add();
@@ -209,11 +216,12 @@ public class Picture {
             mask = 1 << position;
             nthBit = bit << position;
             // write bite to pixel chanel
+            /*
             System.out.format("old: %8.8s\t", Integer.toString(channel & 0xFF,2));
             System.out.format("Masked: %8.8s\t", Integer.toString(channel & ~mask & 0xFF,2));
             System.out.format("new: %8.8s\t", Integer.toString(((channel & ~mask) | nthBit) & 0xFF,2));
             System.out.format("%d -> %d shift to %d index, chanel %d\n", bit, position, indexOfbite.getNumber(), indexOfChannel.getNumber());
-            
+            */
             channel = (channel & ~mask) | nthBit;
             switch (indexOfChannel.getNumber()) {
                 case 0:
@@ -251,9 +259,11 @@ public class Picture {
         StringBuilder pictureContent = new StringBuilder();
         char nextChar;
         for (int i = 0; i < HEADER_KEY.length(); i++) {
-            nextChar = (char)(loadNextByte() & 0xFF);
+            nextChar = (char)loadNextByte();
+            //nextChar = byte2char(loadNextByte());
             pictureContent.append(nextChar);
         }
+        System.out.format("Founded: %s Key: %s\n", pictureContent.toString(), HEADER_KEY);
         return HEADER_KEY.compareTo(pictureContent.toString()) == 0;
     }
     
@@ -263,11 +273,11 @@ public class Picture {
         byte[] array = HEADER_KEY.getBytes();
         for (byte B : array) {
             storeNextByte(B);
+            //System.out.format(" %d \n", (int)B);
         }
-        for (byte B : array) {
-            System.out.format(" %d \n", (int)B);
-        }
-        System.out.format(" %d %d \n", data.get(0).getR(), data.get(0).getG());
+        // empty chain termination
+        storeNextNBytes(int2Bytes(EMPTY));
+        //System.out.format(" %d %d \n", data.get(0).getR(), data.get(0).getG());
         /*
         for (int i = 0; i < HEADER_KEY.length()/NUMBER_OF_CHANELS; i++) {
             System.out.format(" %s \n", data.get(i));
@@ -275,18 +285,21 @@ public class Picture {
         return true;
     }
     
-    public int[] getStoredFileLinks () {
+    private int[] getStoredFileLinks () {
         if (!checkForHeader()) {
             return null;
         }
         int linkIndex;
         List<Integer> links = new ArrayList();
+        if (isPictureEmpty()) {
+            return new int[0];
+        }
         // set ByteIndexToFirstLink
         linkIndex = getFirstLinkByteIndex();
         setByteIndex(linkIndex);
         // store first link index
         links.add(linkIndex);
-        while ((linkIndex = loadNextInt()) != -1) {
+        while ((linkIndex = loadNextInt()) != LAST) {
             setByteIndex(linkIndex);
             links.add(linkIndex);
         }
@@ -304,25 +317,32 @@ public class Picture {
         int[] links = getStoredFileLinks ();
         if (links == null) return -1;
         if (index >= links.length) return -1;
+        if (links.length == 0) return -1; // empty
         if (index == -1) index = links.length;
         return links[index];
     }
     
     public int getNumberOfStoredFiles () {
         if (!checkForHeader()) return -1;
+        System.out.format("Header exist.\n");
         return getStoredFileLinks().length;
     }
     
     private DataFile loadFile(int ByteIndex) {
         setByteIndex(ByteIndex);
+        if (DEBUG) System.out.format(" --- Chain header ---\n");
         int nextLink = loadNextInt();
         // Int Header lenght
         int headLenght = loadNextInt();
         // Int Data lenght
         int dataLenght = loadNextInt();
         
-        byte[] head = loadNextNBytes(headLenght);
+        if (DEBUG) System.out.format(" --- Load file header ---\n");
+        int alreadyLoaded = 2*INT_LENGHT/BYTE_LENGHT;
+        byte[] head = loadNextNBytes(headLenght - alreadyLoaded);
+        if (DEBUG) System.out.format(" --- Load data ---\n");
         byte[] boady = loadNextNBytes(dataLenght);
+        if (DEBUG) System.out.format(" --- Loading done ---\n");
         DataFile dtf = new DataFile(head, boady);
         return dtf;
     }
@@ -347,6 +367,9 @@ public class Picture {
     private int addNextLink () {
         int last = -1;
         int ByteIndex = findStoredFile(last);
+        if (ByteIndex == -1) { // zadny soubor jeste nebyl zapsan
+            return getFirstLinkByteIndex();
+        }
         setByteIndex(ByteIndex);
         int nextLink = loadNextInt();
         // Int Header lenght
@@ -355,6 +378,7 @@ public class Picture {
         int dataLenght = loadNextInt();
         // calculate size
         int size = headLenght + dataLenght + INT_LENGHT/BYTE_LENGHT;
+        System.out.format("Offset: %d + head len: %d Data len: %d\n", headLenght, dataLenght, INT_LENGHT/BYTE_LENGHT);
         // update link to new chain
         setByteIndex(ByteIndex);
         int newLinkIndex = ByteIndex + size;
@@ -369,25 +393,28 @@ public class Picture {
         if (!checkForHeader()) {    // nema zatim hlavicku
             createAndStoreHeader();
         }
+        
         // set link index
         int LinkByteIndex = addNextLink();
         setByteIndex(LinkByteIndex);
-        
-        return false;
+        if (DEBUG) System.out.format("Link Byte index: %d\n", LinkByteIndex);
         
         // chain termination
-        storeNextNBytes(int2Bytes(-1));
+        storeNextNBytes(int2Bytes(LAST));
         
         // Header
+        if (DEBUG) System.out.format(" --- Store header ---\n");
         for (int i = 0; i < df.getHeaderSize(); i++) {
             B = df.getHeadByte(i);
             storeNextByte(B);
         }
         // Data
+        if (DEBUG) System.out.format(" --- Store Data ----\n");
         for (int i = 0; i < df.getDataSize(); i++) {
             B = df.getDataByte(i);
             storeNextByte(B);
         }
+        if (DEBUG) System.out.format(" --- Storing done ---\n");
         return true;
     }
     

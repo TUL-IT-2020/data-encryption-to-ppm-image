@@ -37,7 +37,15 @@ public class PictureAndDataTest {
         return df;
     }
     
-    @Test
+    private boolean createNewFile (File file) throws IOException {
+        if (file.exists()) {
+            // file already exist, removing file.
+            file.delete();
+        }
+        return file.createNewFile();
+    }
+    
+    //@Test
     public void willFileFitToPicture() {
         Picture p;
         DataFile df;
@@ -57,7 +65,7 @@ public class PictureAndDataTest {
         }
     }
     
-    @Test
+    //@Test
     public void numberOfStoredFilesInEmptyPicture() {
         int number;
         int chunk = 1;
@@ -68,7 +76,7 @@ public class PictureAndDataTest {
         assertEquals(-1, number);
     }
     
-    @Test
+    //@Test
     public void listStoredFilesInEpmtyPicture() {
         int chunk = 1;
         Picture p;
@@ -85,19 +93,18 @@ public class PictureAndDataTest {
     
     //@Test
     public void storeFileToPicture() {
-        int chunk = 2;
+        int chunk = 4;
         DataFile df;
         Picture picture = loadPicture(pictures[1].picturePath);
+        picture.setChunkSize(chunk);
         // load data file
         df = loadFile(files[0].filePath);
         
         // can I store the file?
-        picture.setChunkSize(chunk);
         assert picture.canStorebites() > df.getGrossSize() : 
                 "File is to big! " + picture.canStorebites() + " < "+ df.getGrossSize();
         
         // store file
-        picture.setChunkSize(chunk);
         assert (picture.addFile(df) ? 
                 picture.canStorebites() > df.getGrossSize() : 
                 picture.canStorebites() < df.getGrossSize()
@@ -123,40 +130,51 @@ public class PictureAndDataTest {
         DataFile df;
         picture = loadPicture(pictures[1].picturePath);
         
-        // generate test picture
-        String newName = picture.getName() + "_generated" + picture.getFormat();
-        File newFile = new File(pictures[1].path, newName);
-        try {
-            picture.save(newName);
-        } catch (IOException ex) {
-            assert false : "ERROR: " + ex;
-        }
-        newPicture = loadPicture(newFile);
         // load data file
         df = loadFile(files[0].filePath);
         
         // store file
-        newPicture.setChunkSize(chunk);
-        assert (newPicture.addFile(df) ? 
-                newPicture.canStorebites() > df.getGrossSize() : 
-                newPicture.canStorebites() < df.getGrossSize()
+        picture.setChunkSize(chunk);
+        assert (picture.addFile(df) ? 
+                picture.canStorebites() > df.getGrossSize() : 
+                picture.canStorebites() < df.getGrossSize()
                 ) : "ERROR";
         
-        // save file to disk
+        // save2File file to disk
+        String newPictureName = picture.getName() + "_generated" + picture.getFormat();
+        File newPictureFile = new File(pictures[1].path, newPictureName);
         try {
-            newPicture.save(newName);
+            createNewFile(newPictureFile);
+            picture.save2File(newPictureFile);
         } catch (IOException ex) {
             assert false : "ERROR: " + ex;
         }
         
         // is file stored?
-        DataFile[] dtfs = newPicture.storedFiles();
+        DataFile[] dtfs = picture.storedFiles();
         assert dtfs != null : "ERROR : did not store any files!";
+        
+        // save files
+        String newFileName;
+        File newDataFile;
         for (DataFile dtf : dtfs) {
             System.out.format("%s\n", dtf);
+            // save file to disk
+            newFileName = dtf.getName() + "_from_picture" + dtf.getFormat();
+            newDataFile = new File(pictures[1].path, newFileName);
+            try {
+                createNewFile(newPictureFile);
+                dtf.save2File(newDataFile);
+                //newDataFile.delete();
+            } catch (IOException ex) {
+                assert false : "ERROR: " + ex;
+            }
         }
+        
         // TODO
-        // p.removeAllStored()
-        newFile.delete();
+        //newPictureFile.delete();
     }
+    
+    // TODO
+    // p.removeAllStored()
 }

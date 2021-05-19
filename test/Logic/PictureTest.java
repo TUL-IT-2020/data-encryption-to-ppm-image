@@ -124,7 +124,8 @@ public class PictureTest {
         File newFile = new File(pictures[1].path, newName);
         //System.out.format("New name: %s\n", newName);
         try {
-            p.save(newName);
+            newFile.createNewFile();
+            p.save2File(newFile);
             newFile.delete();
         } catch (IOException ex) {
             assert false : "ERROR: " + ex + "\n";

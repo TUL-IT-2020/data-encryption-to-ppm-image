@@ -17,6 +17,10 @@ public class Counter {
         return number;
     }
 
+    public int getSize() {
+        return size;
+    }
+
     public boolean setNumber(int number) {
         if (number >= size || number < 0) {
             return false;
