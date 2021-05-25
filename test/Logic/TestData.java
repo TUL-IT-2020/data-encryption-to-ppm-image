@@ -57,9 +57,9 @@ public class TestData {
         new TestFileData(
                 new File(System.getProperty("user.dir") + "/Data/testDataSet"),
                 "dalsi_soubor", ".txt", 272),
-        new TestFileData(
+        /*new TestFileData(
                 new File(System.getProperty("user.dir") + "/Data/testDataSet"),
-                "f4", ".txt", 12257),
+                "f4", ".txt", 12257),*/
         new TestFileData(
                 new File(System.getProperty("user.dir") + "/Data/testDataSet"),
                 "f5", ".pdf", 864297)

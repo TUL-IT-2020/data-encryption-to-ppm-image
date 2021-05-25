@@ -53,7 +53,8 @@ public class Picture {
         
         this.data = pictureDataAndInfo.getData();
         this.byteIndex = new Counter(data.size());
-        indexOfPixel = new Counter(data.size() * NUMBER_OF_CHANELS);
+        //indexOfPixel = new Counter(data.size() * NUMBER_OF_CHANELS);
+        indexOfPixel = new Counter(data.size());
         indexOfChannel = new Counter(NUMBER_OF_CHANELS);
     }
 
