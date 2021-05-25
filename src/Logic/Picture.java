@@ -93,12 +93,35 @@ public class Picture {
     }
 
     /**
-     * Return how much bites can picture store (capacity - stored files).
+     * Return how much Bytes can picture store.
      * @return 
      */
-    public long canStorebites() {
-        long capacity = 3*getwidth()*getHeight()*chunkSize;
+    public long canStoreBytes () {
+        long capacity = 3*getwidth()*getHeight()*chunkSize/8;
         return capacity;
+    }
+    
+    /**
+     * Return how much more Bytes can picture store (capacity - stored files).
+     * @return 
+     */
+    public long freeSpace () {
+        int last = -1;
+        int ByteIndex = findStoredFile(last);
+        if (ByteIndex == -1) { // zadny soubor jeste nebyl zapsan
+            return canStoreBytes() - getFirstLinkByteIndex();
+        }
+        setByteIndex(ByteIndex);
+        int nextLink = loadNextInt();
+        // Int Header lenght
+        int headLenght = loadNextInt();
+        // Int Data lenght
+        int dataLenght = loadNextInt();
+        // calculate size
+        int size = headLenght + dataLenght + INT_LENGHT/BYTE_LENGHT;
+        // update link to new chain
+        int newLinkIndex = ByteIndex + size;
+        return canStoreBytes() - newLinkIndex;
     }
     
     public boolean isPictureEmpty() {
@@ -342,6 +365,7 @@ public class Picture {
         int alreadyLoaded = 2*INT_LENGHT/BYTE_LENGHT;
         byte[] head = loadNextNBytes(headLenght - alreadyLoaded);
         if (DEBUG) System.out.format(" --- Load data ---\n");
+        System.out.format(" Data len: %d\n", dataLenght);
         byte[] boady = loadNextNBytes(dataLenght);
         if (DEBUG) System.out.format(" --- Loading done ---\n");
         DataFile dtf = new DataFile(head, boady);
@@ -388,7 +412,7 @@ public class Picture {
     }
     
     public boolean addFile(DataFile df) {
-        if (df.getGrossSize() > canStorebites()) return false; // File is to big
+        if (df.getGrossSize() > freeSpace()) return false; // File is to big
         byte B;
         // check for file header
         if (!checkForHeader()) {    // nema zatim hlavicku
