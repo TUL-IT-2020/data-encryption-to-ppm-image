@@ -47,6 +47,15 @@ public class PictureAndDataTest {
         return file.createNewFile();
     }
     
+    private boolean isSameFile (DataFile df1, DataFile df2) {
+        if (df1 == null || df2 == null) return false;
+        if (df1.getDataSize() != df2.getDataSize()) return false;
+        for (int i = 0; i < df1.getDataSize(); i++) {
+            if (df1.getDataByte(i) != df2.getDataByte(i)) return false;
+        }
+        return true;
+    }
+    
     @Test
     public void willFileFitToPicture() {
         Picture p;
@@ -93,7 +102,7 @@ public class PictureAndDataTest {
         }
     }
     
-    //@Test
+    @Test
     public void storeFileToPicture() {
         int chunk = 4;
         DataFile df;
@@ -120,12 +129,13 @@ public class PictureAndDataTest {
         // load file content
         DataFile[] dtfs = picture.storedFiles();
         assert dtfs != null : "ERROR : did not store any files!";
+        assert isSameFile(dtfs[0], df) : "Is not same file!";
         for (DataFile dtf : dtfs) {
             //System.out.format("%s\n", dtf);
         }
     }
     
-    //@Test
+    @Test
     public void storeFileToPictureAndSaveIt() {
         int chunk = 8;
         Picture picture;
@@ -165,6 +175,7 @@ public class PictureAndDataTest {
             // is file stored?
             DataFile[] dtfs = picture.storedFiles();
             assert dtfs != null : "ERROR : did not store any files!";
+            assert isSameFile(dtfs[0], df) : "Is not same file!";
 
             // save files
             String newFileName;
@@ -186,7 +197,7 @@ public class PictureAndDataTest {
         //newPictureFile.delete();
     }
     
-    //@Test
+    @Test
     public void numberOfStoredFiles() {
         int chunk = 4;
         DataFile df;
@@ -222,7 +233,7 @@ public class PictureAndDataTest {
         }
     }
     
-    //@Test
+    @Test
     public void storeFilesToPictureAndThenRemoveThem() {
         int chunk = 4;
         DataFile df;
@@ -285,6 +296,7 @@ public class PictureAndDataTest {
         // is file stored?
         DataFile[] dtfs = picture.storedFiles();
         assert dtfs != null : "ERROR : did not store any files!";
+        assert isSameFile(dtfs[0], df) : "Is not same file!";
         
         // save files
         String newFileName;

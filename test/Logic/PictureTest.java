@@ -132,11 +132,4 @@ public class PictureTest {
         }
     }
     
-    /**
-     * Test of main method, of class Picture.
-     */
-    @Test
-    public void testMain() {
-    }
-    
 }

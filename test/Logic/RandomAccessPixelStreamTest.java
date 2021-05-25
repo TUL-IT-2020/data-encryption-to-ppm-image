@@ -58,7 +58,7 @@ public class RandomAccessPixelStreamTest {
     public void writeAndRead() {
         System.out.format("Write and read:\t");
         Random rand = new Random();
-        int width = 1000;
+        int width = 100;
         int height = 1000;
         int maxDepthPerChannel = 8;
         for (int depthPerChannel = 1; depthPerChannel < maxDepthPerChannel; depthPerChannel++) {
@@ -68,7 +68,7 @@ public class RandomAccessPixelStreamTest {
 
             // data to write
             int size = (int) raf.getCapacity() - 1;
-            System.out.format("\nCapacity : %d\n", size);
+            //System.out.format("\nCapacity : %d\n", size);
             byte[] dataIn = new byte[size];
             for (int i = 0; i < size; i++) {
                 dataIn[i] = (byte) rand.nextInt(255);
