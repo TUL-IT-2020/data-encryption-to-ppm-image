@@ -110,9 +110,9 @@ public class PictureTest {
         for (TestPictureData picture : pictures) {
             p = loadPicture(picture.picturePath);
             p.setChunkSize(depthPerChannel);
-            calculatedCapacity = 3*picture.width*picture.height*depthPerChannel;
-            assert p.canStorebites() == calculatedCapacity: "Invalid size to store: " + 
-                    p.canStorebites() + " != " + calculatedCapacity;
+            calculatedCapacity = 3*picture.width*picture.height*depthPerChannel/8;
+            assert p.canStoreBytes() == calculatedCapacity: "Invalid size to store: " + 
+                    p.canStoreBytes() + " != " + calculatedCapacity;
         }
     }
     
@@ -124,7 +124,8 @@ public class PictureTest {
         File newFile = new File(pictures[1].path, newName);
         //System.out.format("New name: %s\n", newName);
         try {
-            p.save(newName);
+            newFile.createNewFile();
+            p.save2File(newFile);
             newFile.delete();
         } catch (IOException ex) {
             assert false : "ERROR: " + ex + "\n";

@@ -20,7 +20,10 @@ public class TestData {
             "white", ".ppm", 10, 10),
         new TestPictureData(
             new File(System.getProperty("user.dir") + "/Data/testDataSet"),
-            "Face-smile", ".ppm", 50, 50)
+            "Face-smile", ".ppm", 50, 50),
+        new TestPictureData(
+            new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+            "adventuretime", ".ppm", 727, 940)
     };
     
     static class TestPictureData {
@@ -47,7 +50,19 @@ public class TestData {
     public static TestFileData[] files = {
         new TestFileData(
                 new File(System.getProperty("user.dir") + "/Data/testDataSet"),
-                "test", ".txt", 6)
+                "test", ".txt", 6),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                "soubor1", ".txt", 5),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                "dalsi_soubor", ".txt", 272),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                "f4", ".txt", 12257),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                "f5", ".pdf", 864297)
     };
     
     static class TestFileData {

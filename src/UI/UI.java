@@ -21,6 +21,10 @@ public class UI {
         sc.nextLine();
         return number;
     }
+    
+    public static void printTypeChoice () {
+        System.out.print("Zadej volbu: ");
+    }
 
     public static void printInvaliInput() {
         System.out.println("Špatný vstup!");
@@ -28,6 +32,14 @@ public class UI {
 
     public static void printEnd() {
         System.out.println("Aplikace ukončena.");
+    }
+    
+    public static void printPictureNotSelected() {
+        System.out.println("Obrázek není vybrán!");
+    }
+    
+    public static void print (String s) {
+        System.out.format("%s", s);
     }
 
     public static File[] listAllPictires(File dir, String extension) {
@@ -37,27 +49,24 @@ public class UI {
         for (int i = 0; i < files.length; i++) {
             System.out.format("\t %d) %s\n", i+1, files[i].getName());
         }        
-        System.out.print("Zadej volbu: ");
+        printTypeChoice();
         return files;
-    }
-    
-    public static void print (String s) {
-        System.out.format("%s", s);
     }
 
     public static void loadFromPictureMenu(String format, Picture picture, int chunkSize, String sortingType) {
-        
         System.out.println(" --- Hlavní menu ---");
         System.out.format("\t 1) Vybrat formát: %s\n", format);
         System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
         System.out.format("\t 3) Vybrat velikost chunku: %d.\n", chunkSize);
-        System.out.format("\t 4) Vypsat obsah dle: %s.\n", sortingType);
-        System.out.format("\t 5) Přidat soubor do obrázku.\n");
-        System.out.format("\t 6) Nahrát soubor z obrázku.\n");
-        System.out.format("\t 7) Smazat záznamy.\n");
-        System.out.format("\t 8) Provést/Uložit.\n");
-        System.out.format("\t 9) Odejít.\n");
-        System.out.print("Zadej volbu: ");
+        System.out.format("\t 4) Vybrat typ třídění.\n");
+        System.out.format("\t 5) Vypsat obsah dle: %s.\n", sortingType);
+        System.out.format("\t 6) Přidat soubor do obrázku.\n");
+        System.out.format("\t 7) Nahrát soubory z obrázku.\n");
+        System.out.format("\t 8) Smazat záznamy.\n");
+        System.out.format("\t 9) Uložit soubor.\n");
+        System.out.format("\t 10) Uložit obrázek.\n");
+        System.out.format("\t 11) Odejít.\n");
+        printTypeChoice();
     }
 
     public static void chosePictureFormat(String[] PICTURE_FORMATS) {
@@ -65,7 +74,13 @@ public class UI {
         for (int i = 0; i < PICTURE_FORMATS.length; i++) {
             System.out.format("\t %d) %s\n", i+1, PICTURE_FORMATS[i]);
         }
-        System.out.print("Zadej volbu: ");
+        printTypeChoice();
+    }
+    
+    public static String choseNewName () {
+        System.out.print("Zadej nový název: ");
+        String name = sc.nextLine();
+        return name;
     }
 
     public static File[] listAllFiles(File dir) {
@@ -73,7 +88,7 @@ public class UI {
         for (int i = 0; i < files.length; i++) {
             System.out.format("\t %d) %s\n", i+1, files[i].getName());
         }        
-        System.out.print("Zadej volbu: ");
+        printTypeChoice();
         return files;
     }
      

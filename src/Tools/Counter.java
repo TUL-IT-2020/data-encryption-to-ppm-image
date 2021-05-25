@@ -17,6 +17,10 @@ public class Counter {
         return number;
     }
 
+    public int getSize() {
+        return size;
+    }
+
     public boolean setNumber(int number) {
         if (number >= size || number < 0) {
             return false;
@@ -30,8 +34,8 @@ public class Counter {
     }
 
     public int add(int number) {
-        this.number = (this.number + number) % size;
         int carry = (this.number + number) / size;
+        this.number = (this.number + number) % size;        
         return carry;
     }
 }

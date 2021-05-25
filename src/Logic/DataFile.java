@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import static Tools.ByteTools.*;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 /**
  * Class stroting information to store/load from picture.
@@ -21,7 +23,6 @@ public class DataFile {
     // TODO sort by size
     // TODO sort by time
     
-    public static int BYTE_LENGHT = 8;
     private byte[] FileContent = null;
     private Byte[] HeaderContent = null;
 
@@ -46,8 +47,9 @@ public class DataFile {
     /**
      * Load info about file to memory from picture. 
      * @param header 
+     * @param data 
      */
-    public DataFile(byte[] header) {
+    public DataFile(byte[] header, byte[] data) {
         //TODO
         List<Byte> Bytes = new ArrayList();
         add2List(Bytes, header);
@@ -61,26 +63,41 @@ public class DataFile {
         stringLenght = nextInt(Bytes);
         // format string
         this.format = nextString(Bytes, stringLenght);
+        
+        // store data
+        FileContent = data;
     }
 
     public String getName() {
         return name;
     }
 
+    // TODO test it
+    public String getFormat() {
+        return format;
+    }
+
     /**
-     * Return file size in Bytes.
+     * Return data size in Bytes.
      * @return 
      */
+    public long getDataSize() {
+        if (FileContent == null) return -1;
+        return FileContent.length;
+    }
+    
     public long getFileSize() {
+        if (file == null) return -1;
         return file.length();
     }
     
     public long getHeaderSize() {
-        return this.HeaderContent.length;
+        if (HeaderContent == null) return -1;
+        return HeaderContent.length;
     }
     
     public long getGrossSize() {
-        return getHeaderSize() + getFileSize();
+        return getHeaderSize() + getDataSize();
     }
 
     /**
@@ -106,7 +123,7 @@ public class DataFile {
         // --- first index !!!
         
         // Int Data lenght
-        add2List(Bytes, int2Bytes((int)this.getFileSize()));
+        add2List(Bytes, int2Bytes((int)this.getDataSize()));
         
         // Int Name lenght
         array = this.name.getBytes();
@@ -137,12 +154,19 @@ public class DataFile {
     
     // TODO test it
     public byte getHeadByte (int index) {
-        return FileContent[index];
+        return HeaderContent[index];
+    }
+    
+    // TODO test it
+    public void save2File(File path) throws FileNotFoundException, IOException {
+        try (OutputStream os = new FileOutputStream(path)) {
+            os.write(FileContent);
+        }
     }
 
     @Override
     public String toString() {
-        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getFileSize() + '}';
+        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getDataSize() + '}';
     }
     
     // ---- Unused ----

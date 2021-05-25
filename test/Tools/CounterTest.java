@@ -61,7 +61,7 @@ public class CounterTest {
     }
     
     @Test
-    public void carryAfterAdding() {
+    public void counterOwerfloowAfterAdding() {
         int size = 2;
         Counter c = new Counter(size);
         assertEquals(c.getNumber(), 0);
@@ -69,6 +69,22 @@ public class CounterTest {
         assertEquals(c.getNumber(), 1);
         c.add();
         assertEquals(c.getNumber(), 0);
+        c.add();
+        assertEquals(c.getNumber(), 1);
+        c.add();
+        assertEquals(c.getNumber(), 0);
+    }
+    
+    @Test
+    public void carryAfterAdding() {
+        int size = 8;
+        int Jim_Carry = 0;
+        Counter c = new Counter(size);
+        System.out.format("Carry: %d \t number: %d \n", Jim_Carry, c.getNumber());
+        for (int i = 0; i < 2*size; i++) {
+            Jim_Carry = c.add();
+            System.out.format("Carry: %d \t number: %d \n", Jim_Carry, c.getNumber());
+        }
     }
     
 }
