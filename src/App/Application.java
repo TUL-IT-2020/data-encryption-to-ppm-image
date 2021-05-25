@@ -99,6 +99,8 @@ public class Application {
     private static void loadFilesFromPicture () {
         if (picture == null) {
             UI.printPictureNotSelected();
+        } else if (chunkSize == 0) {
+            UI.print("Chybí velikost chuknu!\n");
         } else {
             storedFiles = picture.storedFiles();
             UI.print("Data nahrány.\n");
@@ -130,14 +132,14 @@ public class Application {
     
     private static void printFiles () {
         if (storedFiles == null) {
-            UI.print("Žádné soubory k tisku.");
+            UI.print("Žádné soubory k tisku.\n");
             return;
         }
         String s;
         for (int i = 0; i < storedFiles.length; i++) {
-            s = String.format("\t %d) %s%s o velikosti: %d B\n", 
-                    i+1,
-                    storedFiles[i].getName(), 
+            s = String.format("\t %d) %s%s o velikosti: %d B\n",
+                    i + 1,
+                    storedFiles[i].getName(),
                     storedFiles[i].getFormat(),
                     storedFiles[i].getDataSize());
             UI.print(s);

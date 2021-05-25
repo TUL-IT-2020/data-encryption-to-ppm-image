@@ -74,7 +74,6 @@ public class Picture {
         //System.out.format("Counter size set to: %d.\n", this.chunkSize);
     }
     
-    
     private int getFirstLinkByteIndex () {
         return HEADER_KEY.length();
     }
@@ -123,7 +122,6 @@ public class Picture {
         // save2File data
         pictureDataAndInfo.save2File(newFile);
     }
-    
 
     private boolean checkForHeader () {
         data.setByteIndex(0);
@@ -193,12 +191,21 @@ public class Picture {
         return links[index];
     }
     
+    /**
+     * Will go throw all chain indexes and count number of files stored.
+     * @return number of soted files
+     */
     public int getNumberOfStoredFiles () {
         if (!checkForHeader()) return -1;
         if (DEBUG) System.out.format("Header exist.\n");
         return getStoredFileLinks().length;
     }
     
+    /**
+     * Load single file from Byte index.
+     * @param ByteIndex
+     * @return data file
+     */
     private DataFile loadFile(int ByteIndex) {
         data.setByteIndex(ByteIndex);
         if (DEBUG) System.out.format(" --- Chain header ---\n");
@@ -219,6 +226,10 @@ public class Picture {
         return dtf;
     }
 
+    /**
+     * Return all files stored in picture.
+     * @return 
+     */
     public DataFile[] storedFiles() {
         DataFile[] dtfs = null;
         if (!checkForHeader()) {
@@ -258,6 +269,11 @@ public class Picture {
         return newLinkIndex;
     }
     
+    /**
+     * Will add data file to picture if there is enough free space.
+     * @param df - data file
+     * @return 
+     */
     public boolean addFile(DataFile df) {
         if (df.getGrossSize() > freeSpace()) return false; // File is to big
         byte B;
@@ -290,6 +306,9 @@ public class Picture {
         return true;
     }
     
+    /**
+     * For removing all stored files (will just forgot chain indexes).
+     */
     public void removeAllStored() {
         data.setByteIndex(getFirstLinkByteIndex());
         data.storeNextNBytes(int2Bytes(EMPTY));
@@ -309,8 +328,8 @@ public class Picture {
         } catch (IOException ex) {
             assert false : "Iner ERROR";
         }
-        p.data.setByteIndex(0);
         p.setChunkSize(8);
+        p.data.setByteIndex(0);
         bytes.add(p.data.loadNextByte());
         bytes.add(p.data.loadNextByte());
         bytes.add(p.data.loadNextByte());
