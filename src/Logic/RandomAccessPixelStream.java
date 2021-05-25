@@ -15,14 +15,14 @@ public class RandomAccessPixelStream {
     private static final boolean DEBUG = false;
     
     private List<Pixel> data = new ArrayList();
-    private int chunkSize;
+    private int chunkSize = -1;
     private Counter byteIndex;  // nth Byte
     private Counter indexOfPixel;
     private Counter indexOfChannel;
     private Counter indexOfbite = null;
     
     public RandomAccessPixelStream (List<Pixel> data) {
-        
+        this.data = data;
         indexOfPixel = new Counter(data.size());
         indexOfChannel = new Counter(NUMBER_OF_CHANELS);
     }
@@ -30,7 +30,7 @@ public class RandomAccessPixelStream {
     public void setChunkSize (int chunk) {
         this.chunkSize = chunk;
         this.indexOfbite = new Counter(chunk);
-        this.byteIndex = new Counter((int)canStoreBytes());
+        this.byteIndex = new Counter((int)getCapacity());
         //System.out.format("Counter size set to: %d.\n", this.chunkSize);
     }
     
@@ -38,8 +38,18 @@ public class RandomAccessPixelStream {
         byteIndex.setNumber(index);
     }
     
-    public int getChunkSize() {
+    public int getChunkSize () {
         return chunkSize;
+    }
+    
+    /**
+     * Return how much Bytes can picture store.
+     * @return 
+     */
+    public long getCapacity () {
+        assert chunkSize != -1 : "ERROR, invalid implementation";
+        long capacity = data.size()*3*chunkSize/8;
+        return capacity;
     }
     
     public List<Pixel> getDataContent () {
@@ -56,6 +66,40 @@ public class RandomAccessPixelStream {
         }
     }
     
+    private int getChannel (Pixel pixel) {
+        int channel = -1;
+        switch (indexOfChannel.getNumber()) {
+            case 0:
+                channel = pixel.getR();
+                break;
+            case 1:
+                channel = pixel.getG();
+                break;
+            case 2:
+                channel = pixel.getB();
+                break;
+            default:
+                assert false : "Implementation error!";
+        }
+        return channel;
+    }
+    
+    private void setChannel (Pixel pixel, int channel) {
+        switch (indexOfChannel.getNumber()) {
+            case 0:
+                pixel.setR((byte) channel);
+                break;
+            case 1:
+                pixel.setG((byte) channel);
+                break;
+            case 2:
+                pixel.setB((byte) channel);
+                break;
+            default:
+                assert false : "Implementation error!";
+        }
+    }
+    
     public byte loadNextByte () {
         int carry;
         int ret = 0;
@@ -68,19 +112,7 @@ public class RandomAccessPixelStream {
         for (int i = 0; i < BYTE_LENGHT; i++) {
             // find next bit
             pixel = data.get(indexOfPixel.getNumber());
-            switch (indexOfChannel.getNumber()) {
-                case 0:
-                    channel = pixel.getR();
-                    break;
-                case 1:
-                    channel = pixel.getG();
-                    break;
-                case 2:
-                    channel = pixel.getB();
-                    break;
-                default:
-                    assert false : "Implementation error!";
-            }
+            channel = getChannel(pixel);
             bit = nthBitFromRight(channel, this.chunkSize - indexOfbite.getNumber() -1);
             position = BYTE_LENGHT-i-1;
             nthBit = bit << position;
@@ -128,19 +160,7 @@ public class RandomAccessPixelStream {
         for (int i = 0; i < BYTE_LENGHT; i++) {
             // find next bit
             pixel = data.get(indexOfPixel.getNumber());
-            switch (indexOfChannel.getNumber()) {
-                case 0:
-                    channel = pixel.getR();
-                    break;
-                case 1:
-                    channel = pixel.getG();
-                    break;
-                case 2:
-                    channel = pixel.getB();
-                    break;
-                default:
-                    assert false : "Implementation error!";
-            }
+            channel = getChannel(pixel);
             // bit to store
             bit = nthBitFromLeft(B, i);
             // shifted to right position
@@ -156,19 +176,7 @@ public class RandomAccessPixelStream {
             System.out.format("%d -> %d shift to %d index, chanel %d\n", bit, position, indexOfbite.getNumber(), indexOfChannel.getNumber());
             }*/
             channel = (channel & ~mask) | nthBit;
-            switch (indexOfChannel.getNumber()) {
-                case 0:
-                    pixel.setR((byte) channel);
-                    break;
-                case 1:
-                    pixel.setG((byte) channel);
-                    break;
-                case 2:
-                    pixel.setB((byte) channel);
-                    break;
-                default:
-                    assert false : "Implementation error!";
-            }
+            setChannel(pixel, channel);
             // store modified pixel
             data.set(indexOfPixel.getNumber(), pixel);
             

@@ -84,7 +84,7 @@ public class Picture {
      * @return 
      */
     public long canStoreBytes () {
-        long capacity = 3*getwidth()*getHeight()*data.getChunkSize()/8;
+        long capacity = data.getCapacity();
         return capacity;
     }
     
@@ -118,7 +118,7 @@ public class Picture {
 
     public void save2File(File newFile) throws IOException {
         // store data
-        pictureDataAndInfo.setData(data);
+        pictureDataAndInfo.setData(data.getDataContent());
         
         // save2File data
         pictureDataAndInfo.save2File(newFile);
