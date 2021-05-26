@@ -11,7 +11,7 @@ import java.util.Scanner;
  */
 public class UI {
 
-    public static Scanner sc = new Scanner(System.in);
+    private static Scanner sc = new Scanner(System.in);
     
     public static int readInt() {
         int number = -1;
@@ -26,15 +26,15 @@ public class UI {
         System.out.print("Zadej volbu: ");
     }
 
-    public static void printInvaliInput() {
+    public static void printInvaliInput () {
         System.out.println("Špatný vstup!");
     }
 
-    public static void printEnd() {
+    public static void printEnd () {
         System.out.println("Aplikace ukončena.");
     }
     
-    public static void printPictureNotSelected() {
+    public static void printPictureNotSelected () {
         System.out.println("Obrázek není vybrán!");
     }
     
@@ -42,7 +42,7 @@ public class UI {
         System.out.format("%s", s);
     }
 
-    public static File[] listAllPictires(File dir, String extension) {
+    public static File[] listAllPictures (File dir, String extension) {
         File[] files;
         ExtensionFilter filter = new ExtensionFilter(extension);
         files = dir.listFiles(filter);
@@ -53,7 +53,7 @@ public class UI {
         return files;
     }
 
-    public static void loadFromPictureMenu(String format, Picture picture, int chunkSize, String sortingType) {
+    public static void loadFromPictureMenu (String format, Picture picture, int chunkSize, String sortingType) {
         System.out.println(" --- Hlavní menu ---");
         System.out.format("\t 1) Vybrat formát: %s\n", format);
         System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
@@ -69,7 +69,7 @@ public class UI {
         printTypeChoice();
     }
 
-    public static void chosePictureFormat(String[] PICTURE_FORMATS) {
+    public static void chosePictureFormat (String[] PICTURE_FORMATS) {
         System.out.format("Kompatibilní formáty:\n");
         for (int i = 0; i < PICTURE_FORMATS.length; i++) {
             System.out.format("\t %d) %s\n", i+1, PICTURE_FORMATS[i]);
@@ -83,7 +83,7 @@ public class UI {
         return name;
     }
 
-    public static File[] listAllFiles(File dir) {
+    public static File[] listAllFiles (File dir) {
         File[] files = dir.listFiles();
         for (int i = 0; i < files.length; i++) {
             System.out.format("\t %d) %s\n", i+1, files[i].getName());

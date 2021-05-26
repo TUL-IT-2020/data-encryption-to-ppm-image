@@ -9,10 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import Logic.PictureFormats.PictureFormatInterface;
 
 /**
- *
+ * Implemetntatoin of PictureFormatInterface for use with PPM format.
+ * Compatible types: P3
  * @author pytel
  */
 public class FormatPPM implements PictureFormatInterface {
@@ -31,6 +31,12 @@ public class FormatPPM implements PictureFormatInterface {
         }
     }
     
+    /**
+     * Read header data from picture (br).
+     * @param br
+     * @return true if picture have valid format
+     * @throws IOException 
+     */
     private boolean readHead (BufferedReader br) throws IOException {
         String line = null;
         // Format
@@ -56,6 +62,12 @@ public class FormatPPM implements PictureFormatInterface {
         return true;
     }
     
+    /**
+     * Read pixel data from picture (br).
+     * @param br
+     * @return true if data could be read.
+     * @throws IOException 
+     */
     private boolean readData (BufferedReader br) throws IOException {
         data.clear();
         switch (MagicNumber) {
@@ -74,6 +86,12 @@ public class FormatPPM implements PictureFormatInterface {
         return true;
     }
     
+    /**
+     * Read one pixel (R,G,B) from picture (br).
+     * @param br
+     * @return
+     * @throws IOException 
+     */
     private Pixel readPixel (BufferedReader br) throws IOException{
         int R = Integer.parseInt(br.readLine());
         int G = Integer.parseInt(br.readLine());
@@ -99,20 +117,25 @@ public class FormatPPM implements PictureFormatInterface {
     }
 
     @Override
-    public boolean setData(List<Pixel> data) {
+    public boolean setData (List<Pixel> data) {
         if (data.size() != width*height) return false;
         this.data = data;
         return true;
     }
     
     @Override
-    public void save2File(File path) throws FileNotFoundException, IOException {
+    public void save2File (File path) throws FileNotFoundException, IOException {
         try (FileWriter fw = new FileWriter(path)) {
             writeHead(fw);
             if (!writeData(fw)) throw new IOException("Ivalid data format");
         }
     }
     
+    /**
+     * Write picture header data back to disk (fw).
+     * @param fw
+     * @throws IOException 
+     */
     private void writeHead (FileWriter fw) throws IOException {
         // Format
         fw.write(MagicNumber + "\n");
@@ -124,6 +147,12 @@ public class FormatPPM implements PictureFormatInterface {
         fw.write(MAX_VALUE + "\n");
     }
     
+    /**
+     * Write picture pixel data back to disk (fw).
+     * @param fw
+     * @return false if invalid data format.
+     * @throws IOException 
+     */
     private boolean writeData (FileWriter fw) throws IOException {
         switch (MagicNumber) {
             case "P3":
@@ -137,6 +166,13 @@ public class FormatPPM implements PictureFormatInterface {
         return true;
     }
     
+    /**picture
+     * Write pixel data back to disk (fw).
+     * @param fw
+     * @param pixel
+     * @return false if pixel contain invalid data.
+     * @throws IOException 
+     */
     private boolean writeP3TypePixel (FileWriter fw, Pixel pixel) throws IOException{
         // TODO use string builder !!!
         int R = pixel.getR();

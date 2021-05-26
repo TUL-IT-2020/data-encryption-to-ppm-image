@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 /**
- *
+ * Filter out files with out valid extension.
  * @author pytel
  */
 public class ExtensionFilter implements FilenameFilter {

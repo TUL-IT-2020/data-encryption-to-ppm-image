@@ -49,7 +49,7 @@ public class DataFile {
      * @param header 
      * @param data 
      */
-    public DataFile(byte[] header, byte[] data) {
+    public DataFile (byte[] header, byte[] data) {
         //TODO
         List<Byte> Bytes = new ArrayList();
         add2List(Bytes, header);
@@ -78,24 +78,32 @@ public class DataFile {
     }
 
     /**
-     * Return data size in Bytes.
-     * @return 
+     * @return data size in Bytes.
      */
     public long getDataSize() {
         if (FileContent == null) return -1;
         return FileContent.length;
     }
     
+    /**
+     * @return file size in Bytes.
+     */
     public long getFileSize() {
         if (file == null) return -1;
         return file.length();
     }
     
+    /**
+     * @return header size in Bytes.
+     */
     public long getHeaderSize() {
         if (HeaderContent == null) return -1;
         return HeaderContent.length;
     }
     
+    /**
+     * @return header + data size in Bytes.
+     */
     public long getGrossSize() {
         return getHeaderSize() + getDataSize();
     }
@@ -114,6 +122,9 @@ public class DataFile {
         }
     }
     
+    /**
+     * Create header from specific format.
+     */
     private void generateHeader () {
         byte[] array;
         // Byte ArrayList

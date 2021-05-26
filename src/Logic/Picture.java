@@ -68,12 +68,20 @@ public class Picture {
         return data.getChunkSize();
     }
     
+    /**
+     * Set chunk size if in valid interval.
+     * @param chunk 
+     */
     public void setChunkSize (int chunk) {
         if (chunk < 1 || chunk > 8) throw new IllegalArgumentException("Invalid chunk size!");
         this.data.setChunkSize(chunk);
         //System.out.format("Counter size set to: %d.\n", this.chunkSize);
     }
     
+    /**
+     * 
+     * @return Byte index of first header.
+     */
     private int getFirstLinkByteIndex () {
         return HEADER_KEY.length();
     }
@@ -110,11 +118,20 @@ public class Picture {
         return canStoreBytes() - newLinkIndex;
     }
     
+    /**
+     * 
+     * @return true if no files are stored in picture.
+     */
     public boolean isPictureEmpty() {
         data.setByteIndex(getFirstLinkByteIndex());
         return data.loadNextInt() == EMPTY;
     }
 
+    /**
+     * Save picture data & info to newFile.
+     * @param newFile
+     * @throws IOException 
+     */
     public void save2File(File newFile) throws IOException {
         // store data
         pictureDataAndInfo.setData(data.getDataContent());
@@ -123,6 +140,10 @@ public class Picture {
         pictureDataAndInfo.save2File(newFile);
     }
 
+    /**
+     * Return true if header exist and check with key.
+     * @return 
+     */
     private boolean checkForHeader () {
         data.setByteIndex(0);
         StringBuilder pictureContent = new StringBuilder();
@@ -154,6 +175,10 @@ public class Picture {
         return true;
     }
     
+    /**
+     * 
+     * @return Byte indexis of file headers.
+     */
     private int[] getStoredFileLinks () {
         if (!checkForHeader()) {
             return null;

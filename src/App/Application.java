@@ -39,7 +39,7 @@ public class Application {
     private static void changePicture() {
         int index;
         File[] files;
-        files = UI.listAllPictires(dataDir, pictureFormat);
+        files = UI.listAllPictures(dataDir, pictureFormat);
         index = UI.readInt() - 1;
         if (index >= 0 && index < files.length) {
             try {
@@ -53,7 +53,7 @@ public class Application {
         }
     }
     
-    private static void selectChunnkSize () {
+    private static void selectChunkSize () {
         int min = 1;
         int max = 8;
         UI.print("Zadej volbu (" + min + "-" + max + "): ");
@@ -187,7 +187,7 @@ public class Application {
                     changePicture();
                     break;
                 case 3:
-                    selectChunnkSize();
+                    selectChunkSize();
                     break;
                 case 4: // select sorting type
                     // TODO
