@@ -30,55 +30,77 @@ public class DataFileTest {
 
     @Test
     public void createDataFile() {
+        System.out.format("CreateTest: \t");
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
             assertNotNull(df);
         }
+        System.out.format("Done\n");
     }
 
     @Test
     public void createDataFileAndGetName() {
+        System.out.format("Get name: \t");
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
             assert df.getName().compareTo(file.name) == 0 : "Invalid name: "
                     + df.getName() + " != " + file.name;
         }
+        System.out.format("Done\n");
     }
 
     @Test
+    public void testGetFormat() {
+        System.out.format("Get format: \t");
+        for (TestFileData file : files) {
+            DataFile df = loadFile(file.filePath);
+            assert df.getFormat().compareTo(file.format) == 0 : "Invalid name: "
+                    + df.getFormat() + " != " + file.format;
+        }
+        System.out.format("Done\n");
+    }
+    
+    @Test
     public void GetFileSize() {
+        System.out.format("Get file size: \t");
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
             //System.out.format("File Size: %d\n", df.getDataSize());
             assert df.getDataSize() == file.size : "Invalid size: "
                     + df.getDataSize() + " != " + file.size;
         }
+        System.out.format("Done\n");
     }
 
     @Test
     public void TestGetNBites() {
+        System.out.format("Get n bytes: \t");
+        int chunk = 8;
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
-            int chunk = 8;
             for (int i = 0; i < df.getDataSize() * 8 / chunk; i++) {
                 // TODO test it
                 //System.out.format("Chunk content: %s\n", (char) (df.getNextNbites(chunk) & 0xFF));
             }
         }
+        System.out.format("Done\n");
     }
     
     @Test
     public void TestGetDataBytes() {
+        System.out.format("Get data: \t");
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
             for (int i = 0; i < df.getDataSize(); i++) {
                 //System.out.format("Byte content: %s\n", (char) (df.getDataByte(i) & 0xFF));
             }
         }
+        System.out.format("Done\n");
     }
     
     @Test
     public void TestGetHeadBytes() {
+        System.out.format("Get header bytes: \t");
         byte B;
         DataFile df;
         DataFile ndf;
@@ -89,7 +111,7 @@ public class DataFileTest {
             // read header Bytes
             for (int i = 0; i < df.getHeaderSize(); i++) {
                 B = df.getHeadByte(i);
-                System.out.format("Byte content: %s\n", (char) (B & 0xFF));
+                //System.out.format("Byte content: %s\n", (char) (B & 0xFF));
             }
             // create file from Bytes header
             int startIndex = 2*4;
@@ -103,8 +125,13 @@ public class DataFileTest {
             }
             ndf = new DataFile(header, data);
             System.out.format("%s\n", ndf);
-            Assert.assertEquals(ndf.getName(), df.getName());
+            Assert.assertEquals(df.getName(), ndf.getName());
+            Assert.assertEquals(df.getFormat(), ndf.getFormat());
+            Assert.assertEquals(df.getHeaderSize(), ndf.getHeaderSize());
+            Assert.assertEquals(df.getDataSize(), ndf.getDataSize());
+            Assert.assertEquals(df.getGrossSize(), ndf.getGrossSize());
         }
+        System.out.format("Done\n");
     }
 
 }

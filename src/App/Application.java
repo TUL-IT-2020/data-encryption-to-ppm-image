@@ -163,7 +163,7 @@ public class Application {
             UI.printInvaliInput();
             return;
         }
-        String newName = UI.choseNewName() + OUTPUT_FORMAT;
+        String newName = UI.choseNewName() + storedFiles[index].getFormat();
         File newFile = new File(dataDir, newName);
         try {
             storedFiles[index].save2File(newFile);

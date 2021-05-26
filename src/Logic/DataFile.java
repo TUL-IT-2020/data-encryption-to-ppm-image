@@ -66,13 +66,15 @@ public class DataFile {
         
         // store data
         FileContent = data;
+        
+        // generate header for evaluation
+        generateHeader();
     }
 
     public String getName() {
         return name;
     }
 
-    // TODO test it
     public String getFormat() {
         return format;
     }
@@ -112,8 +114,6 @@ public class DataFile {
      * Load file content to memory.
      */
     private void ReadFile() throws FileNotFoundException, IOException {
-        resetDataArrayPointers();
-        
         // TODO change, nead lot of memory!!!
         // TODO asi to shoří na velký soubory: long -> int
         FileContent = new byte[(int)getFileSize()];
@@ -158,17 +158,14 @@ public class DataFile {
         HeaderContent = Bytes.toArray(new Byte[Bytes.size()]);
     }
 
-    // TODO test it
     public byte getDataByte (int index) {
         return FileContent[index];
     }
     
-    // TODO test it
     public byte getHeadByte (int index) {
         return HeaderContent[index];
     }
     
-    // TODO test it
     public void save2File(File path) throws FileNotFoundException, IOException {
         try (OutputStream os = new FileOutputStream(path)) {
             os.write(FileContent);
@@ -178,41 +175,6 @@ public class DataFile {
     @Override
     public String toString() {
         return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getDataSize() + '}';
-    }
-    
-    // ---- Unused ----
-    private int ByteIndex;
-    private int BitIndex;
-    
-    private void resetDataArrayPointers () {
-        BitIndex = 0;
-        ByteIndex = 0;
-    }
-    
-    /**
-     * Return next n bites stored in Byte aligned to right.
-     * @param chunkSize => n bites to read
-     * @return 
-     */
-    public Byte getNextNbites(int chunkSize) {
-        if (ByteIndex >= FileContent.length) return null;
-        byte bitArray = 0;
-        byte nthBit = 0;
-        byte B;
-        for (int i = 0; i < chunkSize; i++) {
-            // TODO max index cap !!!
-            if (BitIndex >= BYTE_LENGHT) {
-                ByteIndex += 1;
-                BitIndex = 0;
-            }
-            B = FileContent[ByteIndex];
-            nthBit = (byte) (nthBitFromLeft(B, BitIndex) << chunkSize-i-1);
-            bitArray = (byte) (bitArray | nthBit);
-            //System.out.format("Index Byte: %d content: %s \t bit: %d content: %s \n", ByteIndex, byte2char(B), BitIndex, Integer.toString(nthBit & 0xFF,2));
-            //System.out.format("Byte: %s\n", Integer.toString(bitArray & 0xFF,2));
-            BitIndex += 1;
-        }
-        return bitArray;
     }
 
 }
