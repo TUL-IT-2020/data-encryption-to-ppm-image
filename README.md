@@ -2,7 +2,6 @@
 
 Aplikace pro šifrování souborů do obrázků ppm.
 
-## TODO:
-* [ ] Wiki
-* [ ] čtení ze souborů
-* [ ] ukládání to souborů
+![Class diagram](/assets/images/class_diagram.png)
+![JUnit tests](/assets/images/tests.png)
+
