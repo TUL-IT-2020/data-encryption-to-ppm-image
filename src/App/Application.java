@@ -17,8 +17,8 @@ public class Application {
     public static int DEFAULT_PICTURE_FORMAT = 0;
     
     private static boolean exit = false;
-    public static File dataDir = new File(System.getProperty("user.dir") + "/Data/testDataSet");
-    //public static File dataDir = new File(System.getProperty("user.dir") + "/Data");
+    public static File dataDir = new File(System.getProperty("user.dir") + "/data/testDataSet");
+    //public static File dataDir = new File(System.getProperty("user.dir") + "/data");
     private static String pictureFormat = PICTURE_FORMATS[DEFAULT_PICTURE_FORMAT];
     private static Picture picture = null;
     private static int chunkSize = 0;

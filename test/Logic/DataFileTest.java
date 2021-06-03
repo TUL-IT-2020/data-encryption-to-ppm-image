@@ -1,6 +1,6 @@
 package Logic;
 
-import Logic.TestData.TestFileData;
+import static Logic.TestData.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import org.junit.Assert;
