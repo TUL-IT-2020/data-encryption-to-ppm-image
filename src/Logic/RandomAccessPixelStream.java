@@ -3,7 +3,6 @@ package Logic;
 import static Logic.Picture.NUMBER_OF_CHANELS;
 import static Tools.ByteTools.*;
 import Tools.Counter;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

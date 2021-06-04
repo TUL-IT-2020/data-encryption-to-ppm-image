@@ -9,6 +9,9 @@ import java.util.List;
 import static Tools.ByteTools.*;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Class stroting information to store/load from picture.
@@ -19,7 +22,7 @@ public class DataFile {
     private File file;
     private String name;
     private String format;
-    // TODO add time of file creation
+    private long lastModified;
     // TODO sort by size
     // TODO sort by time
     
@@ -36,6 +39,7 @@ public class DataFile {
         this.file = filePath;
         this.name = filePath.getName().split("\\.")[0];
         this.format = "." + filePath.getName().split("\\.")[1];
+        this.lastModified = filePath.lastModified();
         try {
             ReadFile();
             generateHeader();
@@ -64,7 +68,8 @@ public class DataFile {
         // format string
         this.format = nextString(Bytes, stringLenght);
         
-        // creation date
+        // last modifikation date
+        this.lastModified = nextLong(Bytes);
         
         // store data
         FileContent = data;
@@ -79,6 +84,10 @@ public class DataFile {
 
     public String getFormat() {
         return format;
+    }
+
+    public long getLastModified() {
+        return lastModified;
     }
 
     /**
@@ -150,6 +159,10 @@ public class DataFile {
         // Char[] Format
         add2List(Bytes, array);
         
+        // long date
+        array = long2Bytes(this.lastModified);
+        add2List(Bytes, array);
+        
         // insert Header lenght to begining
         byte[] headerLenght = int2Bytes(Bytes.size() + 4);   // 4 - Int lenght
         for (int i = 0; i < headerLenght.length; i++) {
@@ -172,11 +185,15 @@ public class DataFile {
         try (OutputStream os = new FileOutputStream(path)) {
             os.write(FileContent);
         }
+        path.setLastModified(lastModified);
     }
 
     @Override
     public String toString() {
-        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getDataSize() + '}';
+        Date date = new Date(lastModified);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+        String strDate = dateFormat.format(date);
+        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getDataSize() + ", date=" + strDate + '}';
     }
 
 }

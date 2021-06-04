@@ -3,6 +3,7 @@ package Tools;
 import static Tools.ByteTools.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -21,7 +22,7 @@ public class ByteToolsTest {
         List<Byte> Bytes = new ArrayList();
         for (int number : numbers) {
             add2List(Bytes, int2Bytes(number));
-            output = nextInt(Bytes);
+            output = Tools.ByteTools.nextInt(Bytes);
             Assert.assertEquals(number + "!=" + output, number, output);
             //System.out.format("%d == %d\n", number, output);
         }
@@ -75,4 +76,53 @@ public class ByteToolsTest {
         }
         System.out.format("Done\n");
     }
+    
+    @Test
+    public void nextInt() {
+        System.out.format("next int: \t\t");
+        int size = 256;
+        int[] ints;
+        int intRead;
+        List<Byte> Bytes = new ArrayList();
+        Random rand = new Random();
+        // generte longs
+        ints = rand.ints(size).toArray();
+        
+        // write longs
+        for (int i = 0; i < size; i++) {
+            add2List(Bytes, int2Bytes(ints[i]));
+        }
+        
+        // read longs
+        for (int i = 0; i < size; i++) {
+            intRead = Tools.ByteTools.nextInt(Bytes);
+            assertEquals(ints[i], intRead);
+        }
+        System.out.format("Done\n");
+    }
+    
+    @Test
+    public void nextLong() {
+        System.out.format("next long: \t\t");
+        int size = 256;
+        long[] longs;
+        long longRead;
+        List<Byte> Bytes = new ArrayList();
+        Random rand = new Random();
+        // generte longs
+        longs = rand.longs(size).toArray();
+        
+        // write longs
+        for (int i = 0; i < size; i++) {
+            add2List(Bytes, long2Bytes(longs[i]));
+        }
+        
+        // read longs
+        for (int i = 0; i < size; i++) {
+            longRead = Tools.ByteTools.nextLong(Bytes);
+            assertEquals(longs[i], longRead);
+        }
+        System.out.format("Done\n");
+    }
+    
 }

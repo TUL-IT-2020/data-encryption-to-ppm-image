@@ -3,7 +3,6 @@ package Logic.PictureFormats;
 import Logic.Pixel;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class FormatPPM implements PictureFormatInterface {
     private List<Pixel> data = new ArrayList();
     
     @Override
-    public void loadPicture(File path) throws FileNotFoundException, IOException {
+    public void loadPicture(File path) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             if (!readHead(br)) throw new IOException("Unsoported type of ppm format");
             if (!readData(br)) throw new IOException("Ivalid data format");
@@ -125,7 +124,7 @@ public class FormatPPM implements PictureFormatInterface {
     }
     
     @Override
-    public void save2File (File path) throws FileNotFoundException, IOException {
+    public void save2File (File path) throws IOException {
         try (FileWriter fw = new FileWriter(path)) {
             writeHead(fw);
             if (!writeData(fw)) throw new IOException("Ivalid data format");

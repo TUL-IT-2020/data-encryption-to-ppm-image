@@ -21,7 +21,6 @@ public class Application {
     private static String pictureFormat = PICTURE_FORMATS[DEFAULT_PICTURE_FORMAT];
     private static Picture picture = null;
     private static int chunkSize = 0;
-    private static DataFile dataFile2store;
     private static DataFile[] storedFiles;
     
     private static void changeFormat() {
@@ -72,6 +71,7 @@ public class Application {
     private static void addFile () {
         int index;
         File[] files;
+        DataFile dataFile2store;
         files = UI.listAllFiles(dataDir);
         index = UI.readInt() - 1;
         if (picture == null) {

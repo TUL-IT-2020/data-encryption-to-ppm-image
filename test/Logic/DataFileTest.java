@@ -3,6 +3,8 @@ package Logic;
 import static Logic.TestData.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -55,6 +57,22 @@ public class DataFileTest {
         for (TestFileData file : files) {
             DataFile df = loadFile(file.filePath);
             assert df.getFormat().compareTo(file.format) == 0 : "Invalid name: "
+                    + df.getFormat() + " != " + file.format;
+        }
+        System.out.format("Done\n");
+    }
+    
+    @Test
+    public void testGetDate() {
+        System.out.format("Get date: \t");
+        Date date;
+        long dateInMils;
+        for (TestFileData file : files) {
+            DataFile df = loadFile(file.filePath);
+            dateInMils = file.filePath.lastModified();
+            date = new Date(dateInMils);
+            //System.out.format("Last modified: %s\n", date);
+            assert df.getLastModified() == dateInMils : "Invalid name: "
                     + df.getFormat() + " != " + file.format;
         }
         System.out.format("Done\n");
