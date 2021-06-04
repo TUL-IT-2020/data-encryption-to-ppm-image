@@ -39,6 +39,7 @@ Formát zápisu:
 	- byte[] - znaky názvu
 	- Int - délka přípony
 	- byte[] - znaky přípony
+	- byte[8] - long date
 	- byte[] - binární data souboru
 
 ### Objektový model

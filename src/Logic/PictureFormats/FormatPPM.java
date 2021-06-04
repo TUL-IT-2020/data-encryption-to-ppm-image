@@ -2,6 +2,7 @@ package Logic.PictureFormats;
 
 import Logic.Pixel;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -125,9 +126,9 @@ public class FormatPPM implements PictureFormatInterface {
     
     @Override
     public void save2File (File path) throws IOException {
-        try (FileWriter fw = new FileWriter(path)) {
-            writeHead(fw);
-            if (!writeData(fw)) throw new IOException("Ivalid data format");
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+            writeHead(bw);
+            if (!writeData(bw)) throw new IOException("Ivalid data format");
         }
     }
     
@@ -136,15 +137,15 @@ public class FormatPPM implements PictureFormatInterface {
      * @param fw
      * @throws IOException 
      */
-    private void writeHead (FileWriter fw) throws IOException {
+    private void writeHead (BufferedWriter bw) throws IOException {
         // Format
-        fw.write(magicNumber + "\n");
+        bw.write(magicNumber + "\n");
         // heading
-        fw.write("# Modified by my app.\n");  // TODO konstant
+        bw.write("# Modified by my app.\n");  // TODO konstant
         // dimensions
-        fw.write(this.width + " " + this.height + "\n");
+        bw.write(this.width + " " + this.height + "\n");
         // Maxval
-        fw.write(MAX_VALUE + "\n");
+        bw.write(MAX_VALUE + "\n");
     }
     
     /**
@@ -153,11 +154,11 @@ public class FormatPPM implements PictureFormatInterface {
      * @return false if invalid data format.
      * @throws IOException 
      */
-    private boolean writeData (FileWriter fw) throws IOException {
+    private boolean writeData (BufferedWriter bw) throws IOException {
         switch (magicNumber) {
             case "P3":
                 for (Pixel pixel : data) {
-                    if (!writeP3TypePixel(fw, pixel)) return false;
+                    if (!writeP3TypePixel(bw, pixel)) return false;
                 }
                 break;
             default:
@@ -182,7 +183,7 @@ public class FormatPPM implements PictureFormatInterface {
      * @return false if pixel contain invalid data.
      * @throws IOException 
      */
-    private boolean writeP3TypePixel (FileWriter fw, Pixel pixel) throws IOException{
+    private boolean writeP3TypePixel (BufferedWriter bw, Pixel pixel) throws IOException{
         StringBuilder str = new StringBuilder();
         boolean validRange;
         int R = pixel.getR();
@@ -193,7 +194,7 @@ public class FormatPPM implements PictureFormatInterface {
         str.append(String.valueOf(R)).append("\n");
         str.append(String.valueOf(G)).append("\n");
         str.append(String.valueOf(B)).append("\n");
-        fw.write(str.toString());
+        bw.write(str.toString());
         return true;
     }
 }

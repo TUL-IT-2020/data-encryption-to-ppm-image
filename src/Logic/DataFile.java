@@ -17,7 +17,7 @@ import java.util.Date;
  * Class stroting information to store/load from picture.
  * @author pytel
  */
-public class DataFile {
+public class DataFile implements Comparable <DataFile> {
 
     private File file;
     private String name;
@@ -125,7 +125,6 @@ public class DataFile {
      * Load file content to memory.
      */
     private void ReadFile() throws FileNotFoundException, IOException {
-        // TODO change, nead lot of memory!!!
         // TODO asi to shoří na velký soubory: long -> int
         FileContent = new byte[(int)getFileSize()];
         try (FileInputStream fis = new FileInputStream(file)) {
@@ -191,9 +190,19 @@ public class DataFile {
     @Override
     public String toString() {
         Date date = new Date(lastModified);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");  
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
         String strDate = dateFormat.format(date);
         return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getDataSize() + ", date=" + strDate + '}';
+    }
+
+    /**
+     * Comparing by file name.
+     * @param dtf
+     * @return 
+     */
+    @Override
+    public int compareTo(DataFile dtf) {
+        return this.name.compareTo(dtf.name);
     }
 
 }

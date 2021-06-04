@@ -1,9 +1,13 @@
 package Logic;
 
+import Tools.DataFileComparatorByName;
+import Tools.DataFileComparatorByDate;
+import Tools.DataFileComparatorBySize;
 import static Logic.TestData.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
@@ -116,6 +120,63 @@ public class DataFileTest {
         System.out.format("Done\n");
     }
     
+    private void printDtfs (DataFile[] dtfs) {
+        for (DataFile dtf : dtfs) {
+            System.out.format("%s\n", dtf);
+        }
+    }
+    
+    @Test
+    public void sort() {
+        System.out.format("Sort by name: \t");
+        DataFile[] dtfs = new DataFile[files.length];
+        for (int i = 0; i < files.length; i++) {
+            dtfs[i] = loadFile(files[i].filePath);
+        }
+        Arrays.sort(dtfs);
+        printDtfs(dtfs);
+        System.out.format("Done\n");
+    }
+    
+    @Test
+    public void sortByName() {
+        System.out.format("Sort by name: \t");
+        DataFile[] dtfs = new DataFile[files.length];
+        for (int i = 0; i < files.length; i++) {
+            dtfs[i] = loadFile(files[i].filePath);
+        }
+        Comparator compare = new DataFileComparatorByName();
+        Arrays.sort(dtfs, compare);
+        printDtfs(dtfs);
+        System.out.format("Done\n");
+    }
+    
+    @Test
+    public void sortBySize() {
+        System.out.format("Sort by size: \t");
+        DataFile[] dtfs = new DataFile[files.length];
+        for (int i = 0; i < files.length; i++) {
+            dtfs[i] = loadFile(files[i].filePath);
+        }
+        Comparator compare = new DataFileComparatorBySize();
+        Arrays.sort(dtfs, compare);
+        printDtfs(dtfs);
+        System.out.format("Done\n");
+    }
+    
+    @Test
+    public void sortByDate() {
+        System.out.format("Sort by date: \t");
+        DataFile[] dtfs = new DataFile[files.length];
+        for (int i = 0; i < files.length; i++) {
+            dtfs[i] = loadFile(files[i].filePath);
+        }
+        Comparator compare = new DataFileComparatorByDate();
+        Arrays.sort(dtfs, compare);
+        printDtfs(dtfs);
+        System.out.format("Done\n");
+    }
+    
     @Test
     public void TestGetHeadBytes() {
         System.out.format("Get header bytes: \t");
@@ -148,6 +209,7 @@ public class DataFileTest {
             Assert.assertEquals(df.getHeaderSize(), ndf.getHeaderSize());
             Assert.assertEquals(df.getDataSize(), ndf.getDataSize());
             Assert.assertEquals(df.getGrossSize(), ndf.getGrossSize());
+            Assert.assertEquals(df.getLastModified(), ndf.getLastModified());
         }
         System.out.format("Done\n");
     }
