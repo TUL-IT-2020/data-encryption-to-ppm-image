@@ -14,7 +14,7 @@ public class RandomAccessPixelStream {
     
     private static final boolean DEBUG = false;
     
-    private List<Pixel> data = new ArrayList();
+    private List<Pixel> data;
     private int chunkSize = -1;
     private Counter byteIndex;  // nth Byte
     private Counter indexOfPixel;
@@ -55,8 +55,7 @@ public class RandomAccessPixelStream {
      */
     public long getCapacity () {
         assert chunkSize != -1 : "ERROR, invalid implementation";
-        long capacity = data.size()*3*chunkSize/8;
-        return capacity;
+        return (long) data.size()*3*chunkSize/8;
     }
     
     /**

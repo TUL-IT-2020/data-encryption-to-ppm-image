@@ -36,7 +36,9 @@ public class ByteToolsTest {
         List<Byte> Bytes = new ArrayList();
         for (String s : strs) {
             add2List(Bytes, s.getBytes());
-            String output = nextString(Bytes, s.length());
+        }
+        for (String s : strs) {
+            String output = nextString(Bytes, s.getBytes().length);
             System.out.format("%s == %s\n", s, output);
             assert s.compareTo(output) == 0 : "ERROR: strings not same!";
         }
@@ -63,9 +65,14 @@ public class ByteToolsTest {
     
     @Test
     public void int2bin() {
+        System.out.format("Int to bin: \t\t");
         int len = 8;
+        String string = "";
         for (int i = 0; i < 256; i++) {
-            //System.out.format(" %s\n", int2BinString(i, len));
+            string = int2BinString(i, len);
+            //System.out.format(" %s\n", string);
+            assertEquals(len, string.length());
         }
+        System.out.format("Done\n");
     }
 }

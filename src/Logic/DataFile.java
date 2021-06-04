@@ -64,6 +64,8 @@ public class DataFile {
         // format string
         this.format = nextString(Bytes, stringLenght);
         
+        // creation date
+        
         // store data
         FileContent = data;
         

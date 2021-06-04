@@ -42,14 +42,41 @@ public class UI {
         System.out.format("%s", s);
     }
 
+    public static void chosePictureFormat (String[] PICTURE_FORMATS) {
+        System.out.format("Kompatibilní formáty:\n");
+        for (int i = 0; i < PICTURE_FORMATS.length; i++) {
+            System.out.format("\t %d) %s\n", i+1, PICTURE_FORMATS[i]);
+        }
+        printTypeChoice();
+    }
+    
+    public static String choseNewName () {
+        System.out.print("Zadej nový název: ");
+        String name = sc.nextLine();
+        return name;
+    }
+
     public static File[] listAllPictures (File dir, String extension) {
         File[] files;
         ExtensionFilter filter = new ExtensionFilter(extension);
         files = dir.listFiles(filter);
-        for (int i = 0; i < files.length; i++) {
-            System.out.format("\t %d) %s\n", i+1, files[i].getName());
-        }        
-        printTypeChoice();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                System.out.format("\t %d) %s\n", i + 1, files[i].getName());
+            }
+            printTypeChoice();
+        }
+        return files;
+    }
+
+    public static File[] listAllFiles (File dir) {
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                System.out.format("\t %d) %s\n", i + 1, files[i].getName());
+            }
+            printTypeChoice();
+        }
         return files;
     }
 
@@ -67,29 +94,6 @@ public class UI {
         System.out.format("\t 10) Uložit obrázek.\n");
         System.out.format("\t 11) Odejít.\n");
         printTypeChoice();
-    }
-
-    public static void chosePictureFormat (String[] PICTURE_FORMATS) {
-        System.out.format("Kompatibilní formáty:\n");
-        for (int i = 0; i < PICTURE_FORMATS.length; i++) {
-            System.out.format("\t %d) %s\n", i+1, PICTURE_FORMATS[i]);
-        }
-        printTypeChoice();
-    }
-    
-    public static String choseNewName () {
-        System.out.print("Zadej nový název: ");
-        String name = sc.nextLine();
-        return name;
-    }
-
-    public static File[] listAllFiles (File dir) {
-        File[] files = dir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            System.out.format("\t %d) %s\n", i+1, files[i].getName());
-        }        
-        printTypeChoice();
-        return files;
     }
      
 }

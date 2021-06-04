@@ -18,7 +18,7 @@ public interface PictureFormatInterface {
      * @throws FileNotFoundException
      * @throws IOException 
      */
-    public void loadPicture(File path) throws FileNotFoundException, IOException;
+    public void loadPicture(File path) throws IOException;
     
     /**
      * @return picture height
@@ -48,6 +48,6 @@ public interface PictureFormatInterface {
      * @throws FileNotFoundException
      * @throws IOException 
      */
-    public void save2File(File path) throws FileNotFoundException, IOException;
+    public void save2File(File path) throws IOException;
     
 }

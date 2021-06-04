@@ -18,7 +18,7 @@ public class ByteTools {
      * @param list
      * @param bytes 
      */
-    public static void add2List (List list, byte[] bytes) {
+    public static void add2List (List<Byte> list, byte[] bytes) {
         for (byte B : bytes) {
             list.add(B);
         }
@@ -42,10 +42,8 @@ public class ByteTools {
      */
     public static String int2BinString (int n, int len) {
         String bin = toBinString(n);
-        String zeros = new String();
-        for (int i = 0; i < len - bin.length(); i++) {
-            zeros += String.valueOf(0);
-        }
+        String zeros = new String(new char[len - bin.length()]);
+        zeros = zeros.replace("\0", String.valueOf(0));
         return zeros + bin;
     }
     

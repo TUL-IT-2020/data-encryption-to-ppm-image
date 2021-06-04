@@ -12,11 +12,10 @@ import java.io.IOException;
  */
 public class Application {
 
-    public static String[] PICTURE_FORMATS = {".ppm"};
+    public static final String[] PICTURE_FORMATS = {".ppm"};
     public static String OUTPUT_FORMAT = ".ppm";
-    public static int DEFAULT_PICTURE_FORMAT = 0;
+    public static final int DEFAULT_PICTURE_FORMAT = 0;
     
-    private static boolean exit = false;
     public static File dataDir = new File(System.getProperty("user.dir") + "/data/testDataSet");
     //public static File dataDir = new File(System.getProperty("user.dir") + "/data");
     private static String pictureFormat = PICTURE_FORMATS[DEFAULT_PICTURE_FORMAT];
@@ -73,7 +72,6 @@ public class Application {
     private static void addFile () {
         int index;
         File[] files;
-        DataFile[] dataFiles;
         files = UI.listAllFiles(dataDir);
         index = UI.readInt() - 1;
         if (picture == null) {
@@ -177,6 +175,7 @@ public class Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        boolean exit = false;
         while (!exit) {
             UI.loadFromPictureMenu(pictureFormat, picture, chunkSize, null);
             switch (UI.readInt()) {

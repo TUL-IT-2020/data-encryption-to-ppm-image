@@ -24,13 +24,13 @@ public class Picture {
     
     private static final boolean DEBUG = false;
     
-    private File path;
-    private String name;
-    private String format;
+    private final File path;
+    private final String name;
+    private final String format;
     
-    private PictureFormatInterface pictureDataAndInfo;
+    private final PictureFormatInterface pictureDataAndInfo;
     
-    private RandomAccessPixelStream data;
+    private final RandomAccessPixelStream data;
     
     public Picture(File picturePath) throws FileNotFoundException, IOException{
         if (!picturePath.exists()) throw new FileNotFoundException();
@@ -91,8 +91,7 @@ public class Picture {
      * @return 
      */
     public long canStoreBytes () {
-        long capacity = data.getCapacity();
-        return capacity;
+        return data.getCapacity();
     }
     
     /**
@@ -158,20 +157,14 @@ public class Picture {
     }
     
     private boolean createAndStoreHeader () {
-        // TODO check if key fit to file !!!
         data.setByteIndex(0);
         byte[] array = HEADER_KEY.getBytes();
+        if (array.length >= canStoreBytes()) return false;
         for (byte B : array) {
             data.storeNextByte(B);
-            //System.out.format(" %d \n", (int)B);
         }
         // empty chain termination
         data.storeNextNBytes(int2Bytes(EMPTY));
-        //System.out.format(" %d %d \n", data.get(0).getR(), data.get(0).getG());
-        /*
-        for (int i = 0; i < HEADER_KEY.length()/NUMBER_OF_CHANELS; i++) {
-            System.out.format(" %s \n", data.get(i));
-        }*/
         return true;
     }
     

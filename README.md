@@ -22,7 +22,7 @@ Můj program umožnuje zápis 1/8 (1-bit dat na 8-bitů obrazu) až 8/8, kde vš
 1. Nahrát soubor z obrázku
 1. Vypsat obsah obrázku podle zvoleného setřídění
 1. Uložit modifikovaný obrázek na disk
-1. Smazat uložená data v obrázku
+1. Smazat uložená data z obrázku
 
 ### Datové struktury
 
@@ -32,14 +32,14 @@ Aby bylo možné ukládat více souborů do jednoho obrázku, tak jsem využil p
 Formát zápisu:
  - klíč
  - n-krát rámec uložených dat:
- 	1. Int - index Bytu následujícího rámce
-	1. Int - délka hlavičky
-	1. Int - délka dat
-	1. Int - délka názvu souboru
-	1. byte[] - znaky názvu
-	1. Int - délka přípony
-	1. byte[] - znaky přípony
-	1. byte[] - binární data souboru
+ 	- Int - index Bytu následujícího rámce
+	- Int - délka hlavičky
+	- Int - délka dat
+	- Int - délka názvu souboru
+	- byte[] - znaky názvu
+	- Int - délka přípony
+	- byte[] - znaky přípony
+	- byte[] - binární data souboru
 
 ### Objektový model
 
@@ -51,6 +51,7 @@ Jako externí knohovnu jsem zvolil JUnit testy (které jsou paradoxně již inte
 Testovací funkce se dají automaticky generovat pomocí: Tools -> Create Tests.
 
 Zde je vidět struktura testů:
+
 ![JUnit tests](/assets/images/JUnit_tests.png)
 
 ## Testování

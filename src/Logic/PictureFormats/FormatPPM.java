@@ -18,7 +18,7 @@ import java.util.List;
 public class FormatPPM implements PictureFormatInterface {
     
     private static final int MAX_VALUE = 255;
-    private String MagicNumber;
+    private String magicNumber;
     private int width;
     private int height;
     private List<Pixel> data = new ArrayList();
@@ -40,16 +40,17 @@ public class FormatPPM implements PictureFormatInterface {
     private boolean readHead (BufferedReader br) throws IOException {
         String line = null;
         // Format
-        this.MagicNumber = br.readLine();
-        switch (MagicNumber) {
+        this.magicNumber = br.readLine();
+        switch (magicNumber) {
             case "P3": break;
             default:
                 return false;   // unsuported format
         }
         //System.out.format("Magic number: %s\n", MagicNumber);
-        // Gimp heading
-        line = br.readLine(); 
-        if (line.contains("#")) line = br.readLine();
+        // comment
+        do {
+            line = br.readLine();
+        } while (line.contains("#"));
         // dimensions
         String[] array = line.split(" ");
         //System.out.format("Array len: %d\n", array.length);
@@ -70,7 +71,7 @@ public class FormatPPM implements PictureFormatInterface {
      */
     private boolean readData (BufferedReader br) throws IOException {
         data.clear();
-        switch (MagicNumber) {
+        switch (magicNumber) {
             case "P3":
                 Pixel pixel;
                 for (int i = 0; i < this.height*this.width; i++) {
@@ -138,7 +139,7 @@ public class FormatPPM implements PictureFormatInterface {
      */
     private void writeHead (FileWriter fw) throws IOException {
         // Format
-        fw.write(MagicNumber + "\n");
+        fw.write(magicNumber + "\n");
         // heading
         fw.write("# Modified by my app.\n");  // TODO konstant
         // dimensions
@@ -154,7 +155,7 @@ public class FormatPPM implements PictureFormatInterface {
      * @throws IOException 
      */
     private boolean writeData (FileWriter fw) throws IOException {
-        switch (MagicNumber) {
+        switch (magicNumber) {
             case "P3":
                 for (Pixel pixel : data) {
                     if (!writeP3TypePixel(fw, pixel)) return false;
@@ -166,6 +167,15 @@ public class FormatPPM implements PictureFormatInterface {
         return true;
     }
     
+    /**
+     * Check if the chanel is in valid range.
+     * @param chanel
+     * @return true if chanel value is in valid range
+     */
+    private boolean chanelValidRange (int chanel) {
+        return chanel <= MAX_VALUE && chanel >= 0;
+    }
+    
     /**picture
      * Write pixel data back to disk (fw).
      * @param fw
@@ -174,13 +184,17 @@ public class FormatPPM implements PictureFormatInterface {
      * @throws IOException 
      */
     private boolean writeP3TypePixel (FileWriter fw, Pixel pixel) throws IOException{
-        // TODO use string builder !!!
+        StringBuilder str = new StringBuilder();
+        boolean validRange;
         int R = pixel.getR();
         int G = pixel.getG();
         int B = pixel.getB();
-        fw.write(R + "\n");
-        fw.write(G + "\n");
-        fw.write(B + "\n");
-        return (R <= MAX_VALUE && R >= 0 && G <= MAX_VALUE && G >= 0 && B <= MAX_VALUE && B >= 0 );
+        validRange = chanelValidRange(R) && chanelValidRange(G) && chanelValidRange(B);
+        if (!validRange) return false;
+        str.append(String.valueOf(R)).append("\n");
+        str.append(String.valueOf(G)).append("\n");
+        str.append(String.valueOf(B)).append("\n");
+        fw.write(str.toString());
+        return true;
     }
 }
