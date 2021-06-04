@@ -11,7 +11,7 @@ import java.util.Scanner;
  */
 public class UI {
 
-    public static Scanner sc = new Scanner(System.in);
+    private static Scanner sc = new Scanner(System.in);
     
     public static int readInt() {
         int number = -1;
@@ -26,34 +26,61 @@ public class UI {
         System.out.print("Zadej volbu: ");
     }
 
-    public static void printInvaliInput() {
+    public static void printInvaliInput () {
         System.out.println("Špatný vstup!");
     }
 
-    public static void printEnd() {
+    public static void printEnd () {
         System.out.println("Aplikace ukončena.");
     }
     
-    public static void printPictureNotSelected() {
+    public static void printPictureNotSelected () {
         System.out.println("Obrázek není vybrán!");
     }
     
     public static void print (String s) {
         System.out.format("%s", s);
     }
+    
+    public static void choseFrom (String comment, String[] choices) {
+        System.out.format(comment + "\n");
+        for (int i = 0; i < choices.length; i++) {
+            System.out.format("\t %d) %s\n", i+1, choices[i]);
+        }
+        printTypeChoice();
+    }
+    
+    public static String choseNewName () {
+        System.out.print("Zadej nový název: ");
+        String name = sc.nextLine();
+        return name;
+    }
 
-    public static File[] listAllPictires(File dir, String extension) {
+    public static File[] listAllPictures (File dir, String extension) {
         File[] files;
         ExtensionFilter filter = new ExtensionFilter(extension);
         files = dir.listFiles(filter);
-        for (int i = 0; i < files.length; i++) {
-            System.out.format("\t %d) %s\n", i+1, files[i].getName());
-        }        
-        printTypeChoice();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                System.out.format("\t %d) %s\n", i + 1, files[i].getName());
+            }
+            printTypeChoice();
+        }
         return files;
     }
 
-    public static void loadFromPictureMenu(String format, Picture picture, int chunkSize, String sortingType) {
+    public static File[] listAllFiles (File dir) {
+        File[] files = dir.listFiles();
+        if (files != null) {
+            for (int i = 0; i < files.length; i++) {
+                System.out.format("\t %d) %s\n", i + 1, files[i].getName());
+            }
+            printTypeChoice();
+        }
+        return files;
+    }
+
+    public static void loadFromPictureMenu (String format, Picture picture, int chunkSize, String sortingType) {
         System.out.println(" --- Hlavní menu ---");
         System.out.format("\t 1) Vybrat formát: %s\n", format);
         System.out.format("\t 2) Vybrat obrázek: %s\n", picture == null ? "není vybrán!" : picture.getName() + format);
@@ -67,29 +94,6 @@ public class UI {
         System.out.format("\t 10) Uložit obrázek.\n");
         System.out.format("\t 11) Odejít.\n");
         printTypeChoice();
-    }
-
-    public static void chosePictureFormat(String[] PICTURE_FORMATS) {
-        System.out.format("Kompatibilní formáty:\n");
-        for (int i = 0; i < PICTURE_FORMATS.length; i++) {
-            System.out.format("\t %d) %s\n", i+1, PICTURE_FORMATS[i]);
-        }
-        printTypeChoice();
-    }
-    
-    public static String choseNewName () {
-        System.out.print("Zadej nový název: ");
-        String name = sc.nextLine();
-        return name;
-    }
-
-    public static File[] listAllFiles(File dir) {
-        File[] files = dir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            System.out.format("\t %d) %s\n", i+1, files[i].getName());
-        }        
-        printTypeChoice();
-        return files;
     }
      
 }

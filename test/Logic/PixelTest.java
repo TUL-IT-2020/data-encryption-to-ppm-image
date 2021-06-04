@@ -14,19 +14,27 @@ public class PixelTest {
     
     @Test
     public void newPixel () {
+        System.out.format("Create test: \t");
         Pixel p = new Pixel((byte)255,(byte)255,(byte)255);
+        assertNotNull(p);
+        System.out.format("Done\n");
     }
     
     @Test
     public void printPixel () {
+        System.out.format("Print test: \t");
         Pixel p = new Pixel((byte)255,(byte)255,(byte)255);
         System.out.format("Test pixel: %s\n", p);
+        System.out.format("Done\n");
     }
     
     @Test
     public void getValue () {
+        System.out.format("Get values: \t");
         int[][] RGB = {
             {0, 0, 0},
+            {1, 2, 3},
+            {123, 27, 5},
             {127, 127, 127},
             {255, 255, 255}
         };
@@ -36,13 +44,17 @@ public class PixelTest {
             assertEquals(rgb[1], p.getG());
             assertEquals(rgb[2], p.getB());
         }
+        System.out.format("Done\n");
     }
     
     @Test
     public void setValue () {
+        System.out.format("Set values: \t");
         Pixel p = new Pixel((byte)0,(byte)0,(byte)0);
         int[][] RGB = {
+            {0, 0, 0},
             {1, 2, 3},
+            {123, 27, 5},
             {127, 127, 127},
             {255, 255, 255}
         };
@@ -54,10 +66,7 @@ public class PixelTest {
             assertEquals(rgb[1], p.getG());
             assertEquals(rgb[2], p.getB());
         }
-    }
-    
-    @Test
-    public void testSomeMethod() {
+        System.out.format("Done\n");
     }
     
 }

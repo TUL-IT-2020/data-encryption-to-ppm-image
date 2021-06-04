@@ -24,13 +24,13 @@ public class Picture {
     
     private static final boolean DEBUG = false;
     
-    private File path;
-    private String name;
-    private String format;
+    private final File path;
+    private final String name;
+    private final String format;
     
-    private PictureFormatInterface pictureDataAndInfo;
+    private final PictureFormatInterface pictureDataAndInfo;
     
-    private RandomAccessPixelStream data;
+    private final RandomAccessPixelStream data;
     
     public Picture(File picturePath) throws FileNotFoundException, IOException{
         if (!picturePath.exists()) throw new FileNotFoundException();
@@ -68,12 +68,20 @@ public class Picture {
         return data.getChunkSize();
     }
     
+    /**
+     * Set chunk size if in valid interval.
+     * @param chunk 
+     */
     public void setChunkSize (int chunk) {
         if (chunk < 1 || chunk > 8) throw new IllegalArgumentException("Invalid chunk size!");
         this.data.setChunkSize(chunk);
         //System.out.format("Counter size set to: %d.\n", this.chunkSize);
     }
     
+    /**
+     * 
+     * @return Byte index of first header.
+     */
     private int getFirstLinkByteIndex () {
         return HEADER_KEY.length();
     }
@@ -83,8 +91,7 @@ public class Picture {
      * @return 
      */
     public long canStoreBytes () {
-        long capacity = data.getCapacity();
-        return capacity;
+        return data.getCapacity();
     }
     
     /**
@@ -110,11 +117,20 @@ public class Picture {
         return canStoreBytes() - newLinkIndex;
     }
     
+    /**
+     * 
+     * @return true if no files are stored in picture.
+     */
     public boolean isPictureEmpty() {
         data.setByteIndex(getFirstLinkByteIndex());
         return data.loadNextInt() == EMPTY;
     }
 
+    /**
+     * Save picture data & info to newFile.
+     * @param newFile
+     * @throws IOException 
+     */
     public void save2File(File newFile) throws IOException {
         // store data
         pictureDataAndInfo.setData(data.getDataContent());
@@ -123,6 +139,10 @@ public class Picture {
         pictureDataAndInfo.save2File(newFile);
     }
 
+    /**
+     * Return true if header exist and check with key.
+     * @return 
+     */
     private boolean checkForHeader () {
         data.setByteIndex(0);
         StringBuilder pictureContent = new StringBuilder();
@@ -137,23 +157,21 @@ public class Picture {
     }
     
     private boolean createAndStoreHeader () {
-        // TODO check if key fit to file !!!
         data.setByteIndex(0);
         byte[] array = HEADER_KEY.getBytes();
+        if (array.length >= canStoreBytes()) return false;
         for (byte B : array) {
             data.storeNextByte(B);
-            //System.out.format(" %d \n", (int)B);
         }
         // empty chain termination
         data.storeNextNBytes(int2Bytes(EMPTY));
-        //System.out.format(" %d %d \n", data.get(0).getR(), data.get(0).getG());
-        /*
-        for (int i = 0; i < HEADER_KEY.length()/NUMBER_OF_CHANELS; i++) {
-            System.out.format(" %s \n", data.get(i));
-        }*/
         return true;
     }
     
+    /**
+     * 
+     * @return Byte indexis of file headers.
+     */
     private int[] getStoredFileLinks () {
         if (!checkForHeader()) {
             return null;
@@ -219,7 +237,7 @@ public class Picture {
         int alreadyLoaded = 2*INT_LENGHT/BYTE_LENGHT;
         byte[] head = data.loadNextNBytes(headLenght - alreadyLoaded);
         if (DEBUG) System.out.format(" --- Load data ---\n");
-        System.out.format(" Data len: %d\n", dataLenght);
+        if (DEBUG) System.out.format(" Data len: %d\n", dataLenght); // důležitý výpis
         byte[] boady = data.loadNextNBytes(dataLenght);
         if (DEBUG) System.out.format(" --- Loading done ---\n");
         DataFile dtf = new DataFile(head, boady);

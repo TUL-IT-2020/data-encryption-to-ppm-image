@@ -1,9 +1,9 @@
 package Logic;
 
+import static Tools.ByteTools.int2Bytes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import junit.framework.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -55,8 +55,8 @@ public class RandomAccessPixelStreamTest {
     }
     
     @Test
-    public void writeAndRead() {
-        System.out.format("Write and read:\t");
+    public void writeAndReadBytes() {
+        System.out.format("Write and read bytes:\t");
         Random rand = new Random();
         int width = 100;
         int height = 1000;
@@ -84,6 +84,44 @@ public class RandomAccessPixelStreamTest {
             raf.setByteIndex(0);
             for (int i = 0; i < size; i++) {
                 assert dataIn[i] == raf.loadNextByte() : "ERROR: index:" + i;
+            }
+        }
+        
+        System.out.format("Done\n");
+    }
+    
+    @Test
+    public void writeAndReadInts() {
+        System.out.format("Write and read ints:\t");
+        Random rand = new Random();
+        int width = 100;
+        int height = 1000;
+        int maxDepthPerChannel = 8;
+        for (int depthPerChannel = 1; depthPerChannel < maxDepthPerChannel; depthPerChannel++) {
+            List<Pixel> pixels = generatePictureData(width, height, (byte) 255, (byte) 255, (byte) 255);
+            RandomAccessPixelStream raf = new RandomAccessPixelStream(pixels);
+            raf.setChunkSize(depthPerChannel);
+
+            // data to write
+            int size = (int) raf.getCapacity()/4 - 1;
+            //System.out.format("\nCapacity : %d\n", size);
+            int[] dataIn = new int[size];
+            for (int i = 0; i < size; i++) {
+                dataIn[i] = rand.nextInt();
+            }
+
+            // write
+            raf.setByteIndex(0);
+            byte[] B;
+            for (int i : dataIn) {
+                B = int2Bytes(i);
+                raf.storeNextNBytes(B);
+            }
+
+            // read
+            raf.setByteIndex(0);
+            for (int i = 0; i < size; i++) {
+                assertEquals("ERROR: index:" + i, dataIn[i], raf.loadNextInt());
             }
         }
         

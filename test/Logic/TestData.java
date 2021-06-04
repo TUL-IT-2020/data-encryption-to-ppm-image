@@ -13,16 +13,16 @@ public class TestData {
      */
     public static TestPictureData[] pictures = {
         new TestPictureData(
-            new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+            new File(System.getProperty("user.dir") + "/data/testDataSet"),
             "small", ".ppm", 2, 3),
         new TestPictureData(
-            new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+            new File(System.getProperty("user.dir") + "/data/testDataSet"),
             "white", ".ppm", 10, 10),
         new TestPictureData(
-            new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+            new File(System.getProperty("user.dir") + "/data/testDataSet"),
             "Face-smile", ".ppm", 50, 50),
         new TestPictureData(
-            new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+            new File(System.getProperty("user.dir") + "/data/testDataSet"),
             "adventuretime", ".ppm", 727, 940)
     };
     
@@ -49,19 +49,28 @@ public class TestData {
      */
     public static TestFileData[] files = {
         new TestFileData(
-                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
                 "test", ".txt", 6),
         new TestFileData(
-                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
                 "soubor1", ".txt", 5),
         new TestFileData(
-                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
                 "dalsi_soubor", ".txt", 272),
-        /*new TestFileData(
-                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
-                "f4", ".txt", 12257),*/
         new TestFileData(
-                new File(System.getProperty("user.dir") + "/Data/testDataSet"),
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
+                "lorem_krátké", ".txt", 137),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
+                "lorem1", ".txt", 571),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
+                "lorem2", ".txt", 1257),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
+                "lorem3", ".txt", 3703),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
                 "f5", ".pdf", 864297)
     };
     
@@ -76,7 +85,7 @@ public class TestData {
             this.path = path;
             this.name = name;
             this.format = format;
-            this.filePath = new File(path, name + format); 
+            this.filePath = new File(path, name + format);
             this.size = size;
         }
     }

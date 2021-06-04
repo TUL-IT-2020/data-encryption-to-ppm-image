@@ -9,19 +9,20 @@ import java.util.List;
 import static Tools.ByteTools.*;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Class stroting information to store/load from picture.
  * @author pytel
  */
-public class DataFile {
+public class DataFile implements Comparable <DataFile> {
 
     private File file;
     private String name;
     private String format;
-    // TODO add time of file creation
-    // TODO sort by size
-    // TODO sort by time
+    private long lastModified;
     
     private byte[] FileContent = null;
     private Byte[] HeaderContent = null;
@@ -36,6 +37,7 @@ public class DataFile {
         this.file = filePath;
         this.name = filePath.getName().split("\\.")[0];
         this.format = "." + filePath.getName().split("\\.")[1];
+        this.lastModified = filePath.lastModified();
         try {
             ReadFile();
             generateHeader();
@@ -49,7 +51,7 @@ public class DataFile {
      * @param header 
      * @param data 
      */
-    public DataFile(byte[] header, byte[] data) {
+    public DataFile (byte[] header, byte[] data) {
         //TODO
         List<Byte> Bytes = new ArrayList();
         add2List(Bytes, header);
@@ -64,38 +66,55 @@ public class DataFile {
         // format string
         this.format = nextString(Bytes, stringLenght);
         
+        // last modifikation date
+        this.lastModified = nextLong(Bytes);
+        
         // store data
         FileContent = data;
+        
+        // generate header for evaluation
+        generateHeader();
     }
 
     public String getName() {
         return name;
     }
 
-    // TODO test it
     public String getFormat() {
         return format;
     }
 
+    public long getLastModified() {
+        return lastModified;
+    }
+
     /**
-     * Return data size in Bytes.
-     * @return 
+     * @return data size in Bytes.
      */
     public long getDataSize() {
         if (FileContent == null) return -1;
         return FileContent.length;
     }
     
+    /**
+     * @return file size in Bytes.
+     */
     public long getFileSize() {
         if (file == null) return -1;
         return file.length();
     }
     
+    /**
+     * @return header size in Bytes.
+     */
     public long getHeaderSize() {
         if (HeaderContent == null) return -1;
         return HeaderContent.length;
     }
     
+    /**
+     * @return header + data size in Bytes.
+     */
     public long getGrossSize() {
         return getHeaderSize() + getDataSize();
     }
@@ -104,9 +123,6 @@ public class DataFile {
      * Load file content to memory.
      */
     private void ReadFile() throws FileNotFoundException, IOException {
-        resetDataArrayPointers();
-        
-        // TODO change, nead lot of memory!!!
         // TODO asi to shoří na velký soubory: long -> int
         FileContent = new byte[(int)getFileSize()];
         try (FileInputStream fis = new FileInputStream(file)) {
@@ -114,6 +130,9 @@ public class DataFile {
         }
     }
     
+    /**
+     * Create header from specific format.
+     */
     private void generateHeader () {
         byte[] array;
         // Byte ArrayList
@@ -123,6 +142,8 @@ public class DataFile {
         // --- first index !!!
         
         // Int Data lenght
+        assert (int)this.getDataSize() >= 0 : "ERROR: invalid size! " + (int)this.getDataSize();
+        //System.out.format("Calculated lenght: %d\n", (int)this.getDataSize());
         add2List(Bytes, int2Bytes((int)this.getDataSize()));
         
         // Int Name lenght
@@ -137,6 +158,10 @@ public class DataFile {
         // Char[] Format
         add2List(Bytes, array);
         
+        // long date
+        array = long2Bytes(this.lastModified);
+        add2List(Bytes, array);
+        
         // insert Header lenght to begining
         byte[] headerLenght = int2Bytes(Bytes.size() + 4);   // 4 - Int lenght
         for (int i = 0; i < headerLenght.length; i++) {
@@ -147,61 +172,37 @@ public class DataFile {
         HeaderContent = Bytes.toArray(new Byte[Bytes.size()]);
     }
 
-    // TODO test it
     public byte getDataByte (int index) {
         return FileContent[index];
     }
     
-    // TODO test it
     public byte getHeadByte (int index) {
         return HeaderContent[index];
     }
     
-    // TODO test it
     public void save2File(File path) throws FileNotFoundException, IOException {
         try (OutputStream os = new FileOutputStream(path)) {
             os.write(FileContent);
         }
+        path.setLastModified(lastModified);
     }
 
     @Override
     public String toString() {
-        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getDataSize() + '}';
+        Date date = new Date(lastModified);
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");  
+        String strDate = dateFormat.format(date);
+        return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getDataSize() + ", date=" + strDate + '}';
     }
-    
-    // ---- Unused ----
-    private int ByteIndex;
-    private int BitIndex;
-    
-    private void resetDataArrayPointers () {
-        BitIndex = 0;
-        ByteIndex = 0;
-    }
-    
+
     /**
-     * Return next n bites stored in Byte aligned to right.
-     * @param chunkSize => n bites to read
+     * Comparing by file name.
+     * @param dtf
      * @return 
      */
-    public Byte getNextNbites(int chunkSize) {
-        if (ByteIndex >= FileContent.length) return null;
-        byte bitArray = 0;
-        byte nthBit = 0;
-        byte B;
-        for (int i = 0; i < chunkSize; i++) {
-            // TODO max index cap !!!
-            if (BitIndex >= BYTE_LENGHT) {
-                ByteIndex += 1;
-                BitIndex = 0;
-            }
-            B = FileContent[ByteIndex];
-            nthBit = (byte) (nthBitFromLeft(B, BitIndex) << chunkSize-i-1);
-            bitArray = (byte) (bitArray | nthBit);
-            //System.out.format("Index Byte: %d content: %s \t bit: %d content: %s \n", ByteIndex, byte2char(B), BitIndex, Integer.toString(nthBit & 0xFF,2));
-            //System.out.format("Byte: %s\n", Integer.toString(bitArray & 0xFF,2));
-            BitIndex += 1;
-        }
-        return bitArray;
+    @Override
+    public int compareTo(DataFile dtf) {
+        return this.name.compareTo(dtf.name);
     }
 
 }

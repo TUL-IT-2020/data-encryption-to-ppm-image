@@ -58,6 +58,7 @@ public class PictureAndDataTest {
     
     @Test
     public void willFileFitToPicture() {
+        System.out.format("willFileFitToPicture: \t");
         Picture p;
         DataFile df;
         int depthPerChannel = 1;
@@ -74,36 +75,47 @@ public class PictureAndDataTest {
                         );*/
             }
         }
+        System.out.format("Done\n");
     }
     
     @Test
     public void numberOfStoredFilesInEmptyPicture() {
+        System.out.format("numberOfStoredFilesInEmptyPicture: \t");
         int number;
         int chunk = 1;
         Picture p;
-        p = loadPicture(pictures[1].picturePath);
-        p.setChunkSize(chunk);
-        number = p.getNumberOfStoredFiles();
-        assertEquals(-1, number);
+        for (TestPictureData picture : pictures) {
+            p = loadPicture(picture.picturePath);
+            p.setChunkSize(chunk);
+            number = p.getNumberOfStoredFiles();
+            assertEquals(-1, number);
+        }
+        System.out.format("Done\n");
     }
     
     @Test
     public void listStoredFilesInEpmtyPicture() {
+        System.out.format("listStoredFilesInEpmtyPicture: \t");
         int chunk = 1;
         Picture p;
         DataFile[] dtfs;
-        p = loadPicture(pictures[1].picturePath);
-        p.setChunkSize(chunk);
-        dtfs = p.storedFiles();
-        if (dtfs != null) {
-            for (DataFile dtf : dtfs) {
-                System.out.format("%s\n", dtf);
+        for (TestPictureData picture : pictures) {
+            p = loadPicture(picture.picturePath);
+            p.setChunkSize(chunk);
+            dtfs = p.storedFiles();
+            if (dtfs != null) {
+                for (DataFile dtf : dtfs) {
+                    System.out.format("%s\n", dtf);
+                }
             }
+            assertNull(dtfs);
         }
+        System.out.format("Done\n");
     }
     
     @Test
     public void storeFileToPicture() {
+        System.out.format("storeFileToPicture: \t");
         int chunk = 4;
         DataFile df;
         Picture picture = loadPicture(pictures[1].picturePath);
@@ -133,14 +145,16 @@ public class PictureAndDataTest {
         for (DataFile dtf : dtfs) {
             //System.out.format("%s\n", dtf);
         }
+        System.out.format("Done\n");
     }
     
     @Test
     public void storeFileToPictureAndSaveIt() {
+        System.out.format("storeFileToPictureAndSaveIt: \t");
         int chunk = 8;
         Picture picture;
         DataFile df;
-        picture = loadPicture(pictures[1].picturePath);
+        picture = loadPicture(pictures[2].picturePath);
         
         // load data file
         for (TestFileData file : files) {
@@ -175,6 +189,7 @@ public class PictureAndDataTest {
             // is file stored?
             DataFile[] dtfs = picture.storedFiles();
             assert dtfs != null : "ERROR : did not store any files!";
+            assertEquals(1, dtfs.length);
             assert isSameFile(dtfs[0], df) : "Is not same file!";
 
             // save files
@@ -188,20 +203,22 @@ public class PictureAndDataTest {
                 try {
                     createNewFile(newDataFile);
                     dtf.save2File(newDataFile);
-                    //newDataFile.delete();
+                    newDataFile.delete();
                 } catch (IOException ex) {
                     assert false : "ERROR: " + ex;
                 }
             }
+            newPictureFile.delete();
         }
-        //newPictureFile.delete();
+        System.out.format("Done\n");
     }
     
     @Test
     public void numberOfStoredFiles() {
+        System.out.format("numberOfStoredFiles: \t");
         int chunk = 4;
         DataFile df;
-        Picture picture = loadPicture(pictures[2].picturePath);
+        Picture picture = loadPicture(pictures[3].picturePath);
         picture.setChunkSize(chunk);
         System.out.format("Number of files to store: %d\n", files.length);
         int numberOfStored = 0;
@@ -231,16 +248,18 @@ public class PictureAndDataTest {
         for (DataFile dtf : dtfs) {
             System.out.format("%s\n", dtf);
         }
+        System.out.format("Done\n");
     }
     
     @Test
     public void storeFilesToPictureAndThenRemoveThem() {
+        System.out.format("storeFilesToPictureAndThenRemoveThem: \t");
         int chunk = 4;
         DataFile df;
         boolean fileStored;
         Picture picture = loadPicture(pictures[1].picturePath);
         picture.setChunkSize(chunk);
-        System.out.format("Number of files to store: %d\n", files.length);
+        //System.out.format("Number of files to store: %d\n", files.length);
         // load data file
         for (TestFileData file : files) {
             df = loadFile(file.filePath);
@@ -255,22 +274,22 @@ public class PictureAndDataTest {
             assert (fileStored
                     ? picture.freeSpace() > df.getGrossSize()
                     : picture.freeSpace() < df.getGrossSize()) : "ERROR";
-            if (fileStored) System.out.format("File stored.\n");
+            //if (fileStored) System.out.format("File stored.\n");
         }
-        System.out.format("Number of stored files: %d\n", picture.getNumberOfStoredFiles());
+        //System.out.format("Number of stored files: %d\n", picture.getNumberOfStoredFiles());
         picture.removeAllStored();
         
         // how many files are stored?
         int number = picture.getNumberOfStoredFiles();
         assertEquals("Number of stored files: " + number, 0, number);
+        System.out.format("Done\n");
     }
     
     @Test
     public void storeChosedFileToPictureAndSaveIt() {
-        System.out.println("storeChosedFileToPictureAndSaveIt");
+        System.out.println("storeChosedFileToPictureAndSaveIt: ");
         int chunk = 8;
         Picture picture;
-        Picture newPicture;
         DataFile df;
         picture = loadPicture(pictures[2].picturePath);
         
@@ -309,14 +328,14 @@ public class PictureAndDataTest {
             try {
                 createNewFile(newDataFile);
                 dtf.save2File(newDataFile);
-                //newDataFile.delete();
+                newDataFile.delete();
             } catch (IOException ex) {
                 assert false : "ERROR: " + ex;
             }
         }
         
-        //newPictureFile.delete();
-        System.out.println();
+        newPictureFile.delete();
+        System.out.format("Done\n");
     }
     
 }

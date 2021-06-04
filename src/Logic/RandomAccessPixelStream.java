@@ -3,18 +3,17 @@ package Logic;
 import static Logic.Picture.NUMBER_OF_CHANELS;
 import static Tools.ByteTools.*;
 import Tools.Counter;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Class for handling random acces to Pixel data list.
  * @author pytel
  */
 public class RandomAccessPixelStream {
     
     private static final boolean DEBUG = false;
     
-    private List<Pixel> data = new ArrayList();
+    private List<Pixel> data;
     private int chunkSize = -1;
     private Counter byteIndex;  // nth Byte
     private Counter indexOfPixel;
@@ -34,28 +33,40 @@ public class RandomAccessPixelStream {
         //System.out.format("Counter size set to: %d.\n", this.chunkSize);
     }
     
+    /**
+     * Set index of byte to read/write.
+     * @param index 
+     */
     public void setByteIndex (int index) {
+        // TODO valid test
         byteIndex.setNumber(index);
     }
     
+    /**
+     * @return chunk size
+     */
     public int getChunkSize () {
         return chunkSize;
     }
     
     /**
-     * Return how much Bytes can picture store.
-     * @return 
+     * @return how much Bytes can picture store.
      */
     public long getCapacity () {
         assert chunkSize != -1 : "ERROR, invalid implementation";
-        long capacity = data.size()*3*chunkSize/8;
-        return capacity;
+        return (long) data.size()*3*chunkSize/8;
     }
     
+    /**
+     * @return all pixel data.
+     */
     public List<Pixel> getDataContent () {
         return data;
     }
     
+    /**
+     * Calculate pixel, channel, bit indexes from ByteIndex.
+     */
     private void calculateIndexes () {
         indexOfPixel.setNumber(byteIndex.getNumber()*BYTE_LENGHT / (NUMBER_OF_CHANELS*chunkSize));
         indexOfChannel.setNumber((byteIndex.getNumber()*BYTE_LENGHT % (NUMBER_OF_CHANELS*chunkSize)) / (chunkSize));
@@ -66,6 +77,10 @@ public class RandomAccessPixelStream {
         }
     }
     
+    /**
+     * @param pixel
+     * @return R,G,B channel from pixel selected by channel index.
+     */
     private int getChannel (Pixel pixel) {
         int channel = -1;
         switch (indexOfChannel.getNumber()) {
@@ -84,22 +99,30 @@ public class RandomAccessPixelStream {
         return channel;
     }
     
-    private void setChannel (Pixel pixel, int channel) {
+    /**
+     * Set pixel R,G,B channel selected by channel index to value.
+     * @param pixel
+     * @param value 
+     */
+    private void setChannel (Pixel pixel, int value) {
         switch (indexOfChannel.getNumber()) {
             case 0:
-                pixel.setR((byte) channel);
+                pixel.setR((byte) value);
                 break;
             case 1:
-                pixel.setG((byte) channel);
+                pixel.setG((byte) value);
                 break;
             case 2:
-                pixel.setB((byte) channel);
+                pixel.setB((byte) value);
                 break;
             default:
                 assert false : "Implementation error!";
         }
     }
     
+    /**
+     * @return one next byte
+     */
     public byte loadNextByte () {
         int carry;
         int ret = 0;
@@ -135,11 +158,23 @@ public class RandomAccessPixelStream {
         return (byte)ret;
     }
     
+    /**
+     * @return one next int
+     */
     public int loadNextInt () {
-        return loadNextByte() << 24 | loadNextByte() << 16 | loadNextByte() << 8 | loadNextByte();
+        byte[] arrayInt = new byte[4];
+        for (int i = 0; i < 4; i++) {
+            arrayInt[i] = loadNextByte();
+        }
+        return byteArrayToInt(arrayInt);
     }
     
+    /**
+     * @param length
+     * @return next byte[lenght]
+     */
     public byte[] loadNextNBytes (int length) {
+        assert length >= 0 : "ERROR: negative length! " + length;
         byte[] Bytes = new byte[length];
         for (int i = 0; i < length; i++) {
             Bytes[i] = loadNextByte();
@@ -147,6 +182,10 @@ public class RandomAccessPixelStream {
         return Bytes;
     }
     
+    /**
+     * Store one Byte.
+     * @param B 
+     */
     public void storeNextByte (byte B) {
         if (DEBUG) System.out.format("Byte to store: %8.8s\n", Integer.toString(B & 0xFF,2));
         int carry;
@@ -189,6 +228,10 @@ public class RandomAccessPixelStream {
         byteIndex.add();
     }
     
+    /**
+     * Store Bytes.
+     * @param Bytes 
+     */
     public void storeNextNBytes (byte[] Bytes) {
         for (int i = 0; i < Bytes.length; i++) {
             storeNextByte(Bytes[i]);
