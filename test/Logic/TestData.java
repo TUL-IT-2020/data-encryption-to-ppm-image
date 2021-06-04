@@ -56,7 +56,7 @@ public class TestData {
                 "soubor1", ".txt", 5),
         new TestFileData(
                 new File(System.getProperty("user.dir") + "/data/testDataSet"),
-                "dalsi_soubor", ".txt", 272),/*
+                "dalsi_soubor", ".txt", 272),
         new TestFileData(
                 new File(System.getProperty("user.dir") + "/data/testDataSet"),
                 "lorem_krátké", ".txt", 137),
@@ -71,7 +71,7 @@ public class TestData {
                 "lorem3", ".txt", 3703),
         new TestFileData(
                 new File(System.getProperty("user.dir") + "/data/testDataSet"),
-                "f5", ".pdf", 864297)*/
+                "f5", ".pdf", 864297)
     };
     
     static class TestFileData {
@@ -85,7 +85,7 @@ public class TestData {
             this.path = path;
             this.name = name;
             this.format = format;
-            this.filePath = new File(path, name + format); 
+            this.filePath = new File(path, name + format);
             this.size = size;
         }
     }

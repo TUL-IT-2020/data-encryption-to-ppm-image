@@ -92,22 +92,26 @@ public class Application {
     }
     
     private static void addFile () {
+        if (picture == null) {
+            UI.print("Obrázek není vybrán!");
+            return;
+        }
+        if (chunkSize == 0) {
+            UI.print("Velikost chunku není zvolena!\n");
+            return;
+        }
         int index;
         File[] files;
         DataFile dataFile2store;
         files = UI.listAllFiles(dataDir);
         index = UI.readInt() - 1;
-        if (picture == null) {
-            UI.print("Obrázek není vybrán!");
-            return;
-        }
         if (index >= 0 && index < files.length) {
             try {
                 dataFile2store = new DataFile(files[index]);
                 if (picture.addFile(dataFile2store) == false) {
                     UI.print("Nelze provést! Soubor je příliš velký.\n");
                 } else {
-                    UI.print("Soubor byl uložen do obrázku\n.");
+                    UI.print("Soubor byl uložen do obrázku.\n");
                 }
             } catch (IOException ex) {
                 assert false : "Implementation error!" + ex;

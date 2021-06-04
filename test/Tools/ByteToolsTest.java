@@ -24,7 +24,7 @@ public class ByteToolsTest {
             add2List(Bytes, int2Bytes(number));
             output = Tools.ByteTools.nextInt(Bytes);
             Assert.assertEquals(number + "!=" + output, number, output);
-            //System.out.format("%d == %d\n", number, output);
+            System.out.format("%d == %d\n", number, output);
         }
         System.out.format("Done\n");
     }

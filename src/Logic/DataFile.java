@@ -23,8 +23,6 @@ public class DataFile implements Comparable <DataFile> {
     private String name;
     private String format;
     private long lastModified;
-    // TODO sort by size
-    // TODO sort by time
     
     private byte[] FileContent = null;
     private Byte[] HeaderContent = null;
@@ -144,6 +142,8 @@ public class DataFile implements Comparable <DataFile> {
         // --- first index !!!
         
         // Int Data lenght
+        assert (int)this.getDataSize() >= 0 : "ERROR: invalid size! " + (int)this.getDataSize();
+        //System.out.format("Calculated lenght: %d\n", (int)this.getDataSize());
         add2List(Bytes, int2Bytes((int)this.getDataSize()));
         
         // Int Name lenght

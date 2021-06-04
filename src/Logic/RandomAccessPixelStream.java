@@ -162,7 +162,11 @@ public class RandomAccessPixelStream {
      * @return one next int
      */
     public int loadNextInt () {
-        return loadNextByte() << 24 | loadNextByte() << 16 | loadNextByte() << 8 | loadNextByte();
+        byte[] arrayInt = new byte[4];
+        for (int i = 0; i < 4; i++) {
+            arrayInt[i] = loadNextByte();
+        }
+        return byteArrayToInt(arrayInt);
     }
     
     /**
@@ -170,6 +174,7 @@ public class RandomAccessPixelStream {
      * @return next byte[lenght]
      */
     public byte[] loadNextNBytes (int length) {
+        assert length >= 0 : "ERROR: negative length! " + length;
         byte[] Bytes = new byte[length];
         for (int i = 0; i < length; i++) {
             Bytes[i] = loadNextByte();

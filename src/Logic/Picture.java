@@ -237,7 +237,7 @@ public class Picture {
         int alreadyLoaded = 2*INT_LENGHT/BYTE_LENGHT;
         byte[] head = data.loadNextNBytes(headLenght - alreadyLoaded);
         if (DEBUG) System.out.format(" --- Load data ---\n");
-        System.out.format(" Data len: %d\n", dataLenght);
+        if (DEBUG) System.out.format(" Data len: %d\n", dataLenght); // důležitý výpis
         byte[] boady = data.loadNextNBytes(dataLenght);
         if (DEBUG) System.out.format(" --- Loading done ---\n");
         DataFile dtf = new DataFile(head, boady);
