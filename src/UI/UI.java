@@ -41,11 +41,11 @@ public class UI {
     public static void print (String s) {
         System.out.format("%s", s);
     }
-
-    public static void chosePictureFormat (String[] PICTURE_FORMATS) {
-        System.out.format("Kompatibilní formáty:\n");
-        for (int i = 0; i < PICTURE_FORMATS.length; i++) {
-            System.out.format("\t %d) %s\n", i+1, PICTURE_FORMATS[i]);
+    
+    public static void choseFrom (String comment, String[] choices) {
+        System.out.format(comment + "\n");
+        for (int i = 0; i < choices.length; i++) {
+            System.out.format("\t %d) %s\n", i+1, choices[i]);
         }
         printTypeChoice();
     }

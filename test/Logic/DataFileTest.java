@@ -126,25 +126,27 @@ public class DataFileTest {
         }
     }
     
-    @Test
-    public void sort() {
-        System.out.format("Sort by name: \t");
+    private DataFile[] loadDtfs () {
         DataFile[] dtfs = new DataFile[files.length];
         for (int i = 0; i < files.length; i++) {
             dtfs[i] = loadFile(files[i].filePath);
         }
+        return dtfs;
+    }
+    
+    @Test
+    public void sort() {
+        System.out.format("Sort by name: \t");
+        DataFile[] dtfs = loadDtfs ();
         Arrays.sort(dtfs);
-        printDtfs(dtfs);
+        //printDtfs(dtfs);
         System.out.format("Done\n");
     }
     
     @Test
     public void sortByName() {
         System.out.format("Sort by name: \t");
-        DataFile[] dtfs = new DataFile[files.length];
-        for (int i = 0; i < files.length; i++) {
-            dtfs[i] = loadFile(files[i].filePath);
-        }
+        DataFile[] dtfs = loadDtfs ();
         Comparator compare = new DataFileComparatorByName();
         Arrays.sort(dtfs, compare);
         printDtfs(dtfs);
@@ -154,10 +156,7 @@ public class DataFileTest {
     @Test
     public void sortBySize() {
         System.out.format("Sort by size: \t");
-        DataFile[] dtfs = new DataFile[files.length];
-        for (int i = 0; i < files.length; i++) {
-            dtfs[i] = loadFile(files[i].filePath);
-        }
+        DataFile[] dtfs = loadDtfs ();
         Comparator compare = new DataFileComparatorBySize();
         Arrays.sort(dtfs, compare);
         printDtfs(dtfs);
@@ -167,10 +166,7 @@ public class DataFileTest {
     @Test
     public void sortByDate() {
         System.out.format("Sort by date: \t");
-        DataFile[] dtfs = new DataFile[files.length];
-        for (int i = 0; i < files.length; i++) {
-            dtfs[i] = loadFile(files[i].filePath);
-        }
+        DataFile[] dtfs = loadDtfs ();
         Comparator compare = new DataFileComparatorByDate();
         Arrays.sort(dtfs, compare);
         printDtfs(dtfs);
@@ -203,7 +199,7 @@ public class DataFileTest {
                 data[i] = df.getDataByte(i);
             }
             ndf = new DataFile(header, data);
-            System.out.format("%s\n", ndf);
+            //System.out.format("%s\n", ndf);
             Assert.assertEquals(df.getName(), ndf.getName());
             Assert.assertEquals(df.getFormat(), ndf.getFormat());
             Assert.assertEquals(df.getHeaderSize(), ndf.getHeaderSize());

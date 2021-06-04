@@ -56,13 +56,22 @@ public class TestData {
                 "soubor1", ".txt", 5),
         new TestFileData(
                 new File(System.getProperty("user.dir") + "/data/testDataSet"),
-                "dalsi_soubor", ".txt", 272),
-        /*new TestFileData(
-                new File(System.getProperty("user.dir") + "/data/testDataSet"),
-                "f4", ".txt", 12257),*/
+                "dalsi_soubor", ".txt", 272),/*
         new TestFileData(
                 new File(System.getProperty("user.dir") + "/data/testDataSet"),
-                "f5", ".pdf", 864297)
+                "lorem_krátké", ".txt", 137),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
+                "lorem1", ".txt", 571),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
+                "lorem2", ".txt", 1257),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
+                "lorem3", ".txt", 3703),
+        new TestFileData(
+                new File(System.getProperty("user.dir") + "/data/testDataSet"),
+                "f5", ".pdf", 864297)*/
     };
     
     static class TestFileData {

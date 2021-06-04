@@ -11,6 +11,11 @@ public class DataFileComparatorBySize  implements Comparator<DataFile> {
     
     @Override
     public int compare(DataFile dtf1, DataFile dtf2) {
-        return Double.compare(dtf1.getGrossSize(), dtf2.getGrossSize());
+        if (dtf1.getGrossSize() == dtf2.getGrossSize()) {
+            return 0;
+        } else if (dtf1.getGrossSize() > dtf2.getGrossSize()) {
+            return +1;
+        }
+        return -1;
     }
 }

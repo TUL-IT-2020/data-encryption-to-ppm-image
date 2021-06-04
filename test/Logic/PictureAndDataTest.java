@@ -154,7 +154,7 @@ public class PictureAndDataTest {
         int chunk = 8;
         Picture picture;
         DataFile df;
-        picture = loadPicture(pictures[1].picturePath);
+        picture = loadPicture(pictures[2].picturePath);
         
         // load data file
         for (TestFileData file : files) {
@@ -189,6 +189,7 @@ public class PictureAndDataTest {
             // is file stored?
             DataFile[] dtfs = picture.storedFiles();
             assert dtfs != null : "ERROR : did not store any files!";
+            assertEquals(1, dtfs.length);
             assert isSameFile(dtfs[0], df) : "Is not same file!";
 
             // save files
@@ -217,7 +218,7 @@ public class PictureAndDataTest {
         System.out.format("numberOfStoredFiles: \t");
         int chunk = 4;
         DataFile df;
-        Picture picture = loadPicture(pictures[2].picturePath);
+        Picture picture = loadPicture(pictures[3].picturePath);
         picture.setChunkSize(chunk);
         System.out.format("Number of files to store: %d\n", files.length);
         int numberOfStored = 0;
@@ -327,13 +328,13 @@ public class PictureAndDataTest {
             try {
                 createNewFile(newDataFile);
                 dtf.save2File(newDataFile);
-                //newDataFile.delete();
+                newDataFile.delete();
             } catch (IOException ex) {
                 assert false : "ERROR: " + ex;
             }
         }
         
-        //newPictureFile.delete();
+        newPictureFile.delete();
         System.out.format("Done\n");
     }
     

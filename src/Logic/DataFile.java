@@ -190,7 +190,7 @@ public class DataFile implements Comparable <DataFile> {
     @Override
     public String toString() {
         Date date = new Date(lastModified);
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");  
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");  
         String strDate = dateFormat.format(date);
         return "DataFile{" + "name=" + name + ", format=" + format + ", size=" + getDataSize() + ", date=" + strDate + '}';
     }
