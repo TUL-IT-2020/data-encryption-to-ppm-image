@@ -30,7 +30,7 @@ Za účelem rozpoznání obrázku se skrytými daty implementoval "klíč", spec
 Aby bylo možné ukládat více souborů do jednoho obrázku, tak jsem využil primitivní implementace link-listu. Kdy každý zápis začíná hodnoutou typu Int odkazující se na index Bytu dalšího záznamu.
 
 Formát zápisu:
- - klíč
+ - byte[] - klíč 
  - n-krát rámec uložených dat:
  	- Int - index Bytu následujícího rámce
 	- Int - délka hlavičky
@@ -39,7 +39,7 @@ Formát zápisu:
 	- byte[] - znaky názvu
 	- Int - délka přípony
 	- byte[] - znaky přípony
-	- byte[8] - long date
+	- long - datum
 	- byte[] - binární data souboru
 
 ### Objektový model
